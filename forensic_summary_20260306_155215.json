@@ -1,0 +1,52 @@
+{
+  "report_date": "2026-03-06 15:52:15",
+  "user_phone": "+18327121",
+  "data_summary": {
+    "total_events": 370075,
+    "sms_count": 100243,
+    "call_count": 101174,
+    "email_count": 168658
+  },
+  "timeline_summary": {
+    "start_date": "2025-02-18 22:01:19",
+    "end_date": "2026-03-06 15:50:15",
+    "total_events": 370075
+  },
+  "contact_summary": {
+    "unique_contacts": 198581,
+    "top_contacts": {
+      "arati@email.com": 92623,
+      "david@email.com": 76035,
+      "arati45@gmail.com": 20069,
+      "sarah41@hotmail.com": 20054,
+      "david76@yahoo.com": 19622,
+      "colleague2@company.com": 16635,
+      "hr@company.com": 16592,
+      "boss@company.com": 16569,
+      "colleague1@company.com": 16506,
+      "client@business.org": 16433
+    }
+  },
+  "suspicious_analysis": {
+    "total_suspicious": 275103,
+    "suspicious_rate": 0.7433709383233128,
+    "categories": {
+      "SPAM": 42397,
+      "SUSPICIOUS": 53153,
+      "FINANCIAL": 64116,
+      "INTERNATIONAL": 86375,
+      "URGENT": 14263,
+      "EXTENDED_COMM": 14799
+    }
+  },
+  "risk_assessment": {
+    "flags": [
+      "Rapid-fire communications: 163,219 sequences <30s apart",
+      "Financial-related communications: 64,116",
+      "Suspicious keyword communications: 53,153",
+      "International communications: 86,375",
+      "Extended communications (>1 hour): 14,799"
+    ],
+    "risk_score": 50
+  }
+}

@@ -1,0 +1,99 @@
+--------------------------------------------------------------------------------
+DIGITAL INVESTIGATION REPORT
+--------------------------------------------------------------------------------
+Report Generated: 2026-03-06 15:52:11
+Case Reference: DF-20260306-155211
+User's Phone Number: +18327121
+
+EXECUTIVE SUMMARY
+----------------------------------------
+Total Events Analyzed: 370,075
+Analysis Period: 380 days
+Date Range: 2025-02-18 to 2026-03-06
+Average Daily Events: 973.9
+
+DATA SOURCES
+----------------------------------------
+SMS Messages: 100,243
+Phone Calls: 101,174
+Emails: 168,658
+
+CONTACT ANALYSIS
+----------------------------------------
+Unique Contacts Identified: 198,581
+
+TOP 20 CONTACTS BY INTERACTION VOLUME:
+--------------------------------------------------------------------------------
+Rank  Contact                                  Total    SMS      Calls    Emails    
+--------------------------------------------------------------------------------
+1     arati@email.com                          92623    0        0        92623     
+2     david@email.com                          76035    0        0        76035     
+3     arati45@gmail.com                        20069    0        0        20069     
+4     sarah41@hotmail.com                      20054    0        0        20054     
+5     david76@yahoo.com                        19622    0        0        19622     
+6     colleague2@company.com                   16635    0        0        16635     
+7     hr@company.com                           16592    0        0        16592     
+8     boss@company.com                         16569    0        0        16569     
+9     colleague1@company.com                   16506    0        0        16506     
+10    client@business.org                      16433    0        0        16433     
+11    note17@tutanota.com                      8778     0        0        8778      
+12    spam94@guerrillamail.com                 8723     0        0        8723      
+13    xxuc13@protonmail.com                    8677     0        0        8677      
+14    +18327121 (USER)                         4        3        1        0         
+15    +17693326                                3        3        0        0         
+16    +18271480                                3        3        0        0         
+17    +14111449                                3        3        0        0         
+18    +15573191                                3        3        0        0         
+19    +12299238                                3        2        1        0         
+20    +18249052                                3        1        2        0         
+
+SUSPICIOUS COMMUNICATIONS ANALYSIS
+----------------------------------------
+Total Suspicious Communications: 275,103
+Suspicious Rate: 74.3%
+
+SUSPICIOUS COMMUNICATIONS BY CATEGORY:
+  • INTERNATIONAL: 86,375 events
+  • FINANCIAL: 64,116 events
+  • SUSPICIOUS: 53,153 events
+  • SPAM: 42,397 events
+  • EXTENDED_COMM: 14,799 events
+  • URGENT: 14,263 events
+
+TOP REASONS FOR SUSPICIOUS CLASSIFICATION:
+  • Extended communication (>1 hour): 101,174 occurrences
+  • International call (>5 minutes): 86,375 occurrences
+  • Unusual pattern: Contains '\d{4,}': 69,900 occurrences
+  • Urgent: Contains 'now': 17,829 occurrences
+  • Suspicious: Contains 'urgent': 15,982 occurrences
+  • Financial: Contains 'bank': 15,306 occurrences
+  • Financial: Contains 'payment': 15,201 occurrences
+  • Financial: Contains 'fee': 14,717 occurrences
+  • Spam: Contains 'click': 13,635 occurrences
+  • Phishing: Contains 'update': 13,263 occurrences
+
+RISK ASSESSMENT
+----------------------------------------
+Overall Risk Score: 50/100
+Risk Level: MEDIUM
+
+DETECTED RED FLAGS / ANOMALIES:
+  ⚠ Rapid-fire communications: 163,219 sequences <30s apart
+    Multiple communications within seconds may indicate coordination, panic, or automated communications.
+  ⚠ Financial-related communications: 64,116
+    Multiple financial-related communications may indicate money transfers, scams, or financial crimes.
+  ⚠ Suspicious keyword communications: 53,153
+    Communications contain suspicious keywords like 'delete', 'secret', 'encrypt', etc.
+  ⚠ International communications: 86,375
+    International communications may indicate foreign contacts or cross-border activities.
+  ⚠ Extended communications (>1 hour): 14,799
+    Exceptionally long communications may indicate detailed planning or negotiations.
+
+INVESTIGATIVE RECOMMENDATIONS
+----------------------------------------
+1. Further investigation recommended for identified anomalies
+2. Review communications with top suspicious contacts
+3. Analyze late-night and rapid-fire communications
+4. Scrutinize financial-related communications
+5. Review international communications
+6. Examine suspicious communications for potential illegal activities
