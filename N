@@ -2539,9 +2539,9 @@ def suspicious_communications_analysis(timeline, user_phone=None):
 
 def display_dataset_overview(sms_data, call_data, email_data):
     """Display dataset overview in table format"""
-    print("\n" + "="*70)
+    print("\n" + "-"*70)
     print(" DATASET OVERVIEW")
-    print("="*70)
+    print("-"*70)
     
     # Calculate statistics
     sms_count = len(sms_data)
@@ -2587,9 +2587,9 @@ def display_dataset_overview(sms_data, call_data, email_data):
 
 def display_data_statistics(sms_data, call_data, email_data):
     """Display detailed data statistics"""
-    print("\n" + "="*70)
+    print("\n" + "-"*70)
     print(" DATA STATISTICS")
-    print("="*70)
+    print("-"*70)
     
     # SMS Statistics
     if sms_data:
@@ -2649,9 +2649,9 @@ def display_data_statistics(sms_data, call_data, email_data):
 
 def display_loading_summary(sms_data, call_data, email_data):
     """Display loading success summary"""
-    print("\n" + "="*70)
+    print("\n" + "-"*70)
     print(" DATA LOADING SUMMARY")
-    print("="*70)
+    print("-"*70)
     
     sms_loaded = len(sms_data)
     call_loaded = len(call_data)
@@ -2671,9 +2671,9 @@ def display_temporal_distribution(timeline):
     if not timeline:
         return
     
-    print("\n" + "="*70)
+    print("\n" + "-"*70)
     print(" TEMPORAL DISTRIBUTION")
-    print("="*70)
+    print("-"*70)
     
     # Count events by time period
     morning = sum(1 for e in timeline if 6 <= e['timestamp'].hour < 12)
@@ -2697,9 +2697,9 @@ def display_daily_activity_pattern(timeline):
     if not timeline:
         return
     
-    print("\n" + "="*70)
+    print("\n" + "-"*70)
     print(" DAILY ACTIVITY PATTERN")
-    print("="*70)
+    print("-"*70)
     
     # Group by day of week
     day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -2736,9 +2736,9 @@ def display_category_distribution(timeline):
     if not timeline:
         return
     
-    print("\n" + "="*70)
+    print("\n" + "-"*70)
     print(" CATEGORY DISTRIBUTION")
-    print("="*70)
+    print("-"*70)
     
     category_reasons = {
         'ROUTINE': "Normal communication",
@@ -2764,50 +2764,7 @@ def display_category_distribution(timeline):
     
     print("-" * 85)
     print(f"{'TOTAL':<18} {total:>12,} {100:>11.1f}% {'-':<40}")
-
-def display_suspicious_by_source(timeline):
-    """Display suspicious communications by source"""
-    suspicious_tags = ['SUSPICIOUS', 'FINANCIAL', 'URGENT', 'INTERNATIONAL', 'EXTENDED_COMM', 'SPAM']
-    suspicious_events = [e for e in timeline if e['forensic_tag'] in suspicious_tags]
-    
-    if not suspicious_events:
-        return
-    
-    print("\n" + "="*70)
-    print(" SUSPICIOUS COMMUNICATIONS BY SOURCE")
-    print("="*70)
-    
-    # Group by source
-    source_suspicious = defaultdict(lambda: {'count': 0, 'reasons': Counter()})
-    
-    for event in suspicious_events:
-        source = event['source']
-        source_suspicious[source]['count'] += 1
-        for reason in event.get('reasons', []):
-            source_suspicious[source]['reasons'][reason] += 1
-    
-    total_suspicious = len(suspicious_events)
-    
-    print(f"\n{'Source':<12} {'Suspicious Count':>18} {'% of Suspicious':>18} {'Primary Reasons':<40}")
-    print("-" * 90)
-    
-    for source in ['SMS', 'CALL', 'EMAIL']:
-        data = source_suspicious.get(source, {'count': 0, 'reasons': Counter()})
-        count = data['count']
-        percentage = count / total_suspicious * 100 if total_suspicious > 0 else 0
         
-        # Get top 3 reasons
-        top_reasons = data['reasons'].most_common(3)
-        if top_reasons:
-            reasons_str = ', '.join([f"{r[0]} ({r[1]})" for r in top_reasons])
-        else:
-            reasons_str = "No specific reasons"
-        
-        print(f"{source:<12} {count:>18,} {percentage:>17.1f}% {reasons_str:<40}")
-    
-    print("-" * 90)
-    print(f"{'TOTAL':<12} {total_suspicious:>18,} {100:>17.1f}% {'-':<40}")
-
 def display_top_suspicious_reasons(timeline):
     """Display top suspicious reasons"""
     suspicious_tags = ['SUSPICIOUS', 'FINANCIAL', 'URGENT', 'INTERNATIONAL', 'EXTENDED_COMM', 'SPAM']
@@ -2816,9 +2773,9 @@ def display_top_suspicious_reasons(timeline):
     if not suspicious_events:
         return
     
-    print("\n" + "="*70)
+    print("\n" + "-"*70)
     print(" TOP SUSPICIOUS REASONS")
-    print("="*70)
+    print("-"*70)
     
     reason_counter = Counter()
     for event in suspicious_events:
@@ -2835,56 +2792,7 @@ def display_top_suspicious_reasons(timeline):
         print(f"{reason:<50} {count:>12,} {percentage:>24.1f}%")
     
     print("-" * 90)
-
-def display_multi_channel_patterns_summary(multi_channel_patterns):
-    """Display multi-channel patterns summary in table format"""
-    if not multi_channel_patterns:
-        print("\n" + "="*70)
-        print(" MULTI-CHANNEL PATTERN DETECTION")
-        print("="*70)
-        print("\nNo multi-channel patterns detected.")
-        return
-    
-    print("\n" + "="*70)
-    print(" MULTI-CHANNEL PATTERN DETECTION")
-    print("="*70)
-    
-    # Count patterns by channel combination
-    channel_counts = defaultdict(int)
-    risk_levels = defaultdict(int)
-    
-    for pattern in multi_channel_patterns:
-        channel_key = ' + '.join(sorted(pattern['media_used']))
-        channel_counts[channel_key] += 1
-        risk_levels[pattern['risk_level']] += 1
-    
-    total_patterns = len(multi_channel_patterns)
-    
-    print(f"\n{'Channel Combination':<25} {'Count':>12} {'% of Multi-Channel':>20} {'Risk Level':>12}")
-    print("-" * 70)
-    
-    # Define order for channel combinations
-    channel_order = ['SMS + Call', 'SMS + Email', 'Call + Email', 'SMS + Call + Email']
-    
-    for combo in channel_order:
-        count = channel_counts.get(combo, 0)
-        if count > 0:
-            percentage = count / total_patterns * 100
-            risk = 'MEDIUM' if combo != 'SMS + Call + Email' else 'HIGH'
-            print(f"{combo:<25} {count:>12,} {percentage:>19.1f}% {risk:>12}")
-    
-    print("-" * 70)
-    print(f"{'TOTAL':<25} {total_patterns:>12,} {100:>19.1f}% {'-':>12}")
-    
-    # Risk level summary
-    print(f"\n{'Risk Level':<15} {'Count':>12} {'Percentage':>15}")
-    print("-" * 45)
-    for risk in ['HIGH', 'MEDIUM']:
-        count = risk_levels.get(risk, 0)
-        percentage = count / total_patterns * 100 if total_patterns > 0 else 0
-        print(f"{risk:<15} {count:>12,} {percentage:>14.1f}%")
-    print("-" * 45)
-
+        
 # ============================================================================
 # VISUALIZATION FUNCTIONS
 # ============================================================================
@@ -3363,9 +3271,6 @@ def export_summary_json(timeline, sms_data, call_data, email_data, contact_count
 # ============================================================================
 
 def enhance_main_menu(timeline, sms_data, call_data, email_data, user_phone=None):
-    print("\n" + "="*70)
-    print(" MULTI SOURCE EVENT RECONSTRUCTION SYSTEM")
-    print("="*70)
     
     # Display all the formatted tables
     sms_count, call_count, email_count, total_records = display_dataset_overview(sms_data, call_data, email_data)
@@ -3374,18 +3279,16 @@ def enhance_main_menu(timeline, sms_data, call_data, email_data, user_phone=None
     display_temporal_distribution(timeline)
     display_daily_activity_pattern(timeline)
     display_category_distribution(timeline)
-    display_suspicious_by_source(timeline)
     display_top_suspicious_reasons(timeline)
-    
-    # Get multi-channel patterns
-    multi_channel_patterns = detect_multi_channel_patterns(timeline, user_phone)
-    display_multi_channel_patterns_summary(multi_channel_patterns)
-    
+        
     # Main menu loop
     while True:
         print("\n" + "="*70)
-        print(" MAIN MENU")
+        print(" MULTI SOURCE EVENT RECONSTRUCTION SYSTEM")
         print("="*70)
+        print("\n" + "-"*70)
+        print(" MAIN MENU")
+        print("-"*70)
         print("1. Timeline Events (Show all communications)")
         print("2. View Detailed Analysis")
         print("3. Suspicious Communications Analysis")
@@ -3442,7 +3345,7 @@ def enhance_main_menu(timeline, sms_data, call_data, email_data, user_phone=None
             print("\n" + "="*70)
             print(" ANALYSIS COMPLETED")
             print("="*70)
-            print("Thank you for using the Digital Forensics Analysis System.")
+            print("Thank you for using the System.")
             break
         
         else:
@@ -3453,11 +3356,9 @@ def enhance_main_menu(timeline, sms_data, call_data, email_data, user_phone=None
 # ============================================================================
 
 def main():
-    """Main function with enhanced formatted tables"""
-    print("\n" + "="*70)
-    print(" MULTI SOURCE EVENT RECONSTRUCTION SYSTEM ")
-    print("="*70)
-    
+    print("\n" + "-"*70)
+    print(" MULTI SOURCE EVENT RECONSTRUCTION SYSTEM")
+    print("-"*70)
     try:
         # Load data
         sms_data, call_data, email_data = data()
