@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+# !/usr/bin/env python3
 
 import pandas as pd
 import numpy as np
@@ -9,8 +9,12 @@ import re
 import json
 from collections import Counter, defaultdict
 import warnings
+import emoji
 warnings.filterwarnings('ignore')
-
+from IPython.display import HTML, display
+from tqdm.notebook import tqdm
+import time
+import sys
 try:
     from IPython.display import display, clear_output
     from IPython import get_ipython
@@ -25,7 +29,7 @@ except:
 # ========================
 
 def load_sms_data():
-    """Load SMS data from CSV or JSON file with enhanced debugging"""
+
     sms_data = []
     
     # Look for both CSV and JSON files
@@ -75,8 +79,39 @@ def load_sms_data():
             return []
     
     try:
-        print(f" Loading SMS data from {sms_file}...")
-        
+        display(HTML("""
+        <style>
+            /* Default Pulsing Glow (Cyan/Magenta) */
+            .progress-bar { 
+               border-radius: 50px !important; 
+               background: linear-gradient(90deg, #00f2ff 0%, #ff00ff 100%) !important;
+               box-shadow: 0 0 15px #00f2ff !important;
+               animation: pulse 1.5s infinite alternate;
+            }
+
+            .progress-bar-success {
+               background: #038505 !important; 
+               box-shadow: none !important;
+             }
+             
+            .progress { 
+               border-radius: 50px !important;
+               height: 12px !important; 
+               background-color: #1a1a1a !important;
+               overflow: visible !important; 
+            }
+        </style>
+
+        """))
+        with tqdm(total=100, desc="Loading") as bar:
+            for i in range(100):
+               time.sleep(0.5)  # Simulate work
+               bar.update(1)     # Manually update the bar
+               if i == 50: bar.set_description("Fetching....")
+            bar.bar_style = 'success' 
+            bar.set_description("Loaded:")
+            print(f" SMS data from {sms_file}... Done!")
+
         # ===== HANDLE JSON FILES =====
         if sms_file.lower().endswith('.json'):
             with open(sms_file, 'r', encoding='utf-8') as f:
@@ -167,7 +202,7 @@ def load_sms_data():
                             'raw_data': record
                         })
         
-        # ===== HANDLE CSV FILES =====
+        # ===== HANDLE CSV FILES (YOUR ORIGINAL CODE) =====
         else:  
             with open(sms_file, 'r', encoding='utf-8', errors='ignore') as f:
                 # First, let's check the file structure
@@ -178,21 +213,21 @@ def load_sms_data():
                 first_line = preview_lines[0]
                 if ',' in first_line:
                     delimiter = ','
-                    print(f"  Detected CSV format with comma delimiter")
+                    #print(f"  Detected CSV format with comma delimiter")
                 elif ';' in first_line:
                     delimiter = ';'
-                    print(f"  Detected CSV format with semicolon delimiter")
+                    #print(f"  Detected CSV format with semicolon delimiter")
                 elif '\t' in first_line:
                     delimiter = '\t'
-                    print(f"  Detected TSV format")
+                    #print(f"  Detected TSV format")
                 else:
                     delimiter = ','
-                    print(f"  Using default comma delimiter")
+                    #print(f"  Using default comma delimiter")
                 
                 # Read the file
                 reader = csv.DictReader(f, delimiter=delimiter)
                 fieldnames = reader.fieldnames
-                print(f"  Found columns: {fieldnames}")
+                #print(f"  Found columns: {fieldnames}")
                 
                 row_count = 0
                 for i, row in enumerate(reader):
@@ -266,14 +301,14 @@ def load_sms_data():
                     })
                     
                     # Show progress for large files
-                    if row_count % 10000 == 0:
-                        print(f"  Processed {row_count:,} SMS records...")
+                    #if row_count % 10000 == 0:
+                        #print(f"  Processed {row_count:,} SMS records...")
         
-        print(f" Successfully loaded {len(sms_data):,} SMS records")
+        #print(f" Successfully loaded {len(sms_data):,} SMS records")
         
         # Show sample of data
-        if sms_data:
-            print(f"  Sample SMS: {sms_data[0]['contact']} - {sms_data[0]['message'][:50]}...")
+        #if sms_data:
+            #print(f"  Sample SMS: {sms_data[0]['contact']} - {sms_data[0]['message'][:50]}...")
         
         return sms_data
         
@@ -284,7 +319,7 @@ def load_sms_data():
         return []
 
 def extract_phone_number(text):
-    """Extract phone number from text"""
+
     if not text:
         return f"+1{np.random.randint(200, 999):03}{np.random.randint(1000, 9999):04}"
     
@@ -326,7 +361,7 @@ def extract_phone_number(text):
     return f"+1{np.random.randint(200, 999):03}{np.random.randint(1000, 9999):04}"
 
 def load_call_data():
-    """Load call data from CDR file (CSV or JSON)"""
+
     call_data = []
     
     possible_files = ['CDR-Call-Details.csv', 'call_data.csv', 'calls.json', 'call_log.json', 'cdr.json', 'CallDetails.csv']
@@ -375,7 +410,38 @@ def load_call_data():
             return []
     
     try:
-        print(f" Loading call data from {call_file}...")
+        display(HTML("""
+        <style>
+            /* Default Pulsing Glow (Cyan/Magenta) */
+            .progress-bar { 
+               border-radius: 50px !important; 
+               background: linear-gradient(90deg, #00f2ff 0%, #ff00ff 100%) !important;
+               box-shadow: 0 0 15px #00f2ff !important;
+               animation: pulse 1.5s infinite alternate;
+            }
+
+            .progress-bar-success {
+               background: #038505 !important; 
+               box-shadow: none !important;
+             }
+             
+            .progress { 
+               border-radius: 50px !important;
+               height: 12px !important; 
+               background-color: #1a1a1a !important;
+               overflow: visible !important; 
+            }
+        </style>
+
+        """))
+        with tqdm(total=100, desc="Loading") as bar:
+            for i in range(100):
+               time.sleep(0.1)  # Simulate work
+               bar.update(1)     # Manually update the bar
+               if i == 50: bar.set_description("Fetching....")
+            bar.colour = 'green'  # Or use bar.bar_style = 'success' in some environments
+            bar.set_description("Loaded:")
+            print(f" Call Data from {call_file}... Done!")
         
         # ===== HANDLE JSON FILES =====
         if call_file.lower().endswith('.json'):
@@ -493,7 +559,7 @@ def load_call_data():
                             'source': 'CALL'
                         })
         
-        # ===== HANDLE CSV FILES =====
+        # ===== HANDLE CSV FILES (YOUR ORIGINAL CODE) =====
         else:  # CSV file
             with open(call_file, 'r', encoding='utf-8', errors='ignore') as f:
                 # First, check if it's actually the CDR file we expect
@@ -501,13 +567,13 @@ def load_call_data():
                 f.seek(0)
                 
                 if 'Phone Number' in first_line and 'Day Mins' in first_line:
-                    print(f"  Detected CDR call details format")
+                    print(f" ")
                 else:
-                    print(f"  Warning: File may not be in expected CDR format")
+                    print(f" ")
                 
                 reader = csv.DictReader(f)
                 fieldnames = reader.fieldnames
-                print(f"  Found columns: {fieldnames}")
+                #print(f"  Found columns: {fieldnames}")
                 
                 row_count = 0
                 # Generate a date range for the calls (last 90 days)
@@ -590,20 +656,20 @@ def load_call_data():
                     })
                     
                     # Show progress for large files
-                    if row_count % 10000 == 0:
-                        print(f"  Processed {row_count:,} call records...")
+                    #if row_count % 10000 == 0:
+                        #print(f"  Processed {row_count:,} call records...")
         
-        print(f" Successfully loaded {len(call_data):,} call records")
+        #print(f" Successfully loaded {len(call_data):,} call records")
         
         # Show statistics
         if call_data:
             total_duration = sum(c['duration'] for c in call_data)
             avg_duration = total_duration / len(call_data) if call_data else 0
-            print(f"  Average call duration: {avg_duration:.1f} seconds")
+            #print(f"  Average call duration: {avg_duration:.1f} seconds")
             
             # Count call types
             call_types = Counter(c['type'] for c in call_data)
-            print(f"  Call types: {dict(call_types)}")
+            #print(f"  Call types: {dict(call_types)}")
         
         return call_data
         
@@ -614,6 +680,7 @@ def load_call_data():
         return []
 
 def load_email_data():
+
     email_data = []
     
     # Try different possible email file names
@@ -668,7 +735,38 @@ def load_email_data():
             return []
     
     try:
-        print(f" Loading email data from {email_file}...")
+        display(HTML("""
+        <style>
+            /* Default Pulsing Glow (Cyan/Magenta) */
+            .progress-bar { 
+               border-radius: 50px !important; 
+               background: linear-gradient(90deg, #00f2ff 0%, #ff00ff 100%) !important;
+               box-shadow: 0 0 15px #00f2ff !important;
+               animation: pulse 1.5s infinite alternate;
+            }
+
+            .progress-bar-success {
+               background: #038505 !important; 
+               box-shadow: none !important;
+             }
+             
+            .progress { 
+               border-radius: 50px !important;
+               height: 12px !important; 
+               background-color: #1a1a1a !important;
+               overflow: visible !important; 
+            }
+        </style>
+
+        """))
+        with tqdm(total=100, desc="Loading") as bar:
+            for i in range(100):
+               time.sleep(0.1)  # Simulate work
+               bar.update(1)     # Manually update the bar
+               if i == 50: bar.set_description("Fetching....")
+            bar.colour = 'green'  # Or use bar.bar_style = 'success' in some environments
+            bar.set_description("Loaded:")
+            print(f" Email Data from {email_file}... Done!")
         
         # ===== HANDLE JSON FILES =====
         if email_file.lower().endswith('.json'):
@@ -770,7 +868,7 @@ def load_email_data():
                             'source': 'EMAIL'
                         })
         
-        # ===== HANDLE CSV FILES =====
+        # ===== HANDLE CSV FILES (YOUR ORIGINAL CODE) =====
         else:  # CSV file
             with open(email_file, 'r', encoding='utf-8', errors='ignore') as f:
                 # First, understand the file structure
@@ -786,13 +884,13 @@ def load_email_data():
                 first_line = preview_lines[0]
                 if ',' in first_line:
                     delimiter = ','
-                    print(f"  Detected CSV format with comma delimiter")
+                    print(f" ")
                 elif ';' in first_line:
                     delimiter = ';'
-                    print(f"  Detected CSV format with semicolon delimiter")
+                    print(f" ")
                 elif '\t' in first_line:
                     delimiter = '\t'
-                    print(f"  Detected TSV format")
+                    print(f" ")
                 else:
                     delimiter = ','
                     print(f"  Using default comma delimiter")
@@ -800,7 +898,7 @@ def load_email_data():
                 # Try to read as CSV
                 reader = csv.DictReader(f, delimiter=delimiter)
                 fieldnames = reader.fieldnames
-                print(f"  Found columns: {fieldnames}")
+                #print(f"  Found columns: {fieldnames}")
                 
                 # Generate a date range for emails (last 180 days)
                 start_date = datetime.now() - timedelta(days=180)
@@ -888,13 +986,13 @@ def load_email_data():
                     })
                     
                     # Show progress
-                    if row_count % 1000 == 0:
-                        print(f"  Processed {row_count:,} email records...")
+                    #if row_count % 1000 == 0:
+                        #print(f"  Processed {row_count:,} email records...")
         
-        print(f" Successfully loaded {len(email_data):,} email records")
+        #print(f" Successfully loaded {len(email_data):,} email records")
         
         if email_data:
-            print(f"  Sample email: From {email_data[0]['sender']} - {email_data[0]['subject'][:50]}...")
+            print(f" ")
         
         return email_data
         
@@ -904,7 +1002,6 @@ def load_email_data():
         return generate_sample_email_data()
 
 def generate_sample_email_data():
-    """Generate realistic sample email data"""
     print(" Generating sample email data...")
     
     email_data = []
@@ -1054,9 +1151,6 @@ def parse_timestamp(timestamp_str):
     return None
 
 def data():
-    print("\n" + "-"*70)
-    print(" LOADING DATA FILES")
-    print("-"*70)
     
     # Check what files exist (both CSV and JSON)
     files = os.listdir('.')
@@ -1070,11 +1164,11 @@ def data():
     
     # Load all three data sources
     print("\n" + "-"*70)
-    sms_data = load_sms_data()
+    sms_data = load_sms_data()  # Modified to handle JSON
     print("\n" + "-"*70)
-    call_data = load_call_data()
+    call_data = load_call_data()  # Modified to handle JSON
     print("\n" + "-"*70)
-    email_data = load_email_data()
+    email_data = load_email_data()  # Modified to handle JSON
     
     # Summary
     total_records = len(sms_data) + len(call_data) + len(email_data)
@@ -1093,6 +1187,7 @@ def data():
 # ============================================================================
 
 def extract_contacts(sms_data, call_data, email_data):
+    """Extract and count contacts from all data sources"""
     contact_counts = Counter()
     contact_details = defaultdict(dict)
     
@@ -1215,6 +1310,7 @@ def find_user_phone_number(sms_data, call_data):
     return None
 
 def categorize_event_with_reasons(record, source_type):
+    """Categorize events for forensic investigation with specific reasons"""
     content = ''
     reasons = []
     
@@ -1413,6 +1509,7 @@ def create_timeline(sms_data, call_data, email_data, user_phone=None):
     return timeline
 
 def analyze_data(sms_data, call_data, email_data, user_phone=None):
+
     print("\n" + "-"*70)
     print("DATA ANALYSIS")
     print("-"*70)
@@ -1667,7 +1764,7 @@ def extract_topic_from_content(content, medium):
 def detect_multi_channel_patterns(timeline, user_phone=None):
     
     print("\n" + "="*70)
-    print(" MULTI-CHANNEL PATTERN DETECTION (DEBUG MODE)")
+    print(" MULTI-CHANNEL PATTERN DETECTION ")
     print("="*70)
     
     if not timeline:
@@ -1675,8 +1772,6 @@ def detect_multi_channel_patterns(timeline, user_phone=None):
         return []
     
     # DEBUG: Show sample of timeline
-    print(f"\n Timeline has {len(timeline)} events")
-    print("\n Sample events (first 5):")
     for i, event in enumerate(timeline[:5]):
         print(f"   {i+1}. {event['timestamp']} - {event['source']} - Contact: {event.get('contact', 'Unknown')}")
     
@@ -1690,8 +1785,8 @@ def detect_multi_channel_patterns(timeline, user_phone=None):
             
             if event['source'] == 'EMAIL':
                 # For emails, try to get from sender/recipient
-                sender = event.get('contact', '')
-                recipient = event.get('details', {}).get('recipient', '')
+                sender = event.get('sender', '')
+                recipient = event.get('recipient', '')
                 
                 # If user is involved, the other party is the contact
                 if user_phone and user_phone.replace('+91', '') + '@user.com' in sender:
@@ -1727,20 +1822,15 @@ def detect_multi_channel_patterns(timeline, user_phone=None):
                 contact_comms[contact]['events'].append({
                     'time': event['timestamp'],
                     'source': event['source'],
-                    'content': event.get('content', '')[:30],
-                    'direction': 'FROM_USER' if event.get('details', {}).get('user_involved') == user_phone else 'TO_USER'
+                    'content': event.get('content', '')[:30]
                 })
         except Exception as e:
             print(f"   Error: {e}")
             continue
     
-    # DEBUG: Show contact statistics
-    print(f"\n CONTACT STATISTICS:")
-    print(f"   Total unique contacts: {len(contact_comms)}")
-    
     # Show sample contacts
     sample_contacts = list(contact_comms.items())[:5]
-    print("\n Sample contacts:")
+    #print("\n Sample contacts:")
     for contact, info in sample_contacts:
         print(f"   • {contact[:30]}... - Channels: {info['channels']} - Events: {info['count']}")
     
@@ -1761,7 +1851,7 @@ def detect_multi_channel_patterns(timeline, user_phone=None):
             sequence = []
             sorted_events = sorted(info['events'], key=lambda x: x['time'])
             for event in sorted_events[:5]:  # First 5 events
-                direction = event.get('direction', 'TO_USER')
+                direction = 'FROM_USER' if user_phone and contact == user_phone else 'TO_USER'
                 sequence.append((event['source'], direction, event['content']))
             
             multi_channel.append({
@@ -1781,6 +1871,51 @@ def detect_multi_channel_patterns(timeline, user_phone=None):
                 'common_topics': []  # You can add topic extraction here if needed
             })
     
+    # Display results
+    print(f"  • Total unique contacts: {len(contact_comms)}")
+    print(f"  • Contacts using multiple channels: {len(multi_channel)}")
+    
+    if multi_channel:
+        # Count by channel type
+        channel_counts = {}
+        for m in multi_channel:
+            key = len(m['channels'])
+            channel_counts[key] = channel_counts.get(key, 0) + 1
+        
+        print(f"\n  • Channel distribution:")
+        for channels, count in sorted(channel_counts.items()):
+            print(f"     - {channels} channels: {count} contacts")
+        
+        # Show examples
+        print("\n📌 DETAILED PATTERNS:")
+        for i, m in enumerate(multi_channel[:10], 1):
+            print(f"\n  Pattern {i}: {m['contact'][:40]}...")
+            print(f"     Channels: {', '.join(m['channels'])}")
+            print(f"     Risk Level: {m['risk_level']}")
+            print(f"     Total communications: {m['total_events']}")
+            print(f"     Time span: {(m['last_seen'] - m['first_seen']).days} days")
+            
+            # Show sequence of communications
+            print("     Communication sequence:")
+            for j, event in enumerate(m['events'][:3], 1):
+                print(f"       {j}. {event['time'].strftime('%Y-%m-%d %H:%M')} - {event['source']}")
+            
+            if m['total_events'] > 3:
+                print(f"       ... and {m['total_events'] - 3} more")
+    else:
+        print("\n❌ NO MULTI-CHANNEL PATTERNS FOUND!")
+        print("\n🔍 DEBUGGING INFO:")
+        print("   This means every contact only uses ONE channel.")
+        print("   Possible issues:")
+        print("   1. Your data files don't have the same contact in multiple channels")
+        print("   2. Contact identification is failing")
+        print("   3. User phone number not matching data format")
+        
+        # Show first few contacts for debugging
+        print("\n📋 First 10 contacts (to check format):")
+        for i, (contact, info) in enumerate(list(contact_comms.items())[:10]):
+            print(f"   {i+1}. {contact[:30]}... - Channels: {info['channels']}")
+    
     return multi_channel
 
 def enhanced_suspicious_analysis(timeline, user_phone=None):
@@ -1792,7 +1927,7 @@ def enhanced_suspicious_analysis(timeline, user_phone=None):
     # NEW: Detect coordinated multi-channel communications
     coordinated_patterns = detect_coordinated_communications(timeline, user_phone)
     
-    print(f"\n COORDINATED MULTI-CHANNEL PATTERNS DETECTED: {len(coordinated_patterns):,}")
+    print(f"\n🔍 COORDINATED MULTI-CHANNEL PATTERNS DETECTED: {len(coordinated_patterns):,}")
     
     if coordinated_patterns:
         print("\n" + "="*70)
@@ -1800,7 +1935,7 @@ def enhanced_suspicious_analysis(timeline, user_phone=None):
         print("="*70)
         
         for i, pattern in enumerate(coordinated_patterns[:10], 1):  # Show top 10
-            print(f"\n{i}.  **COORDINATED PATTERN WITH {pattern['contact'][:30]}...**")
+            print(f"\n{i}. 🚨 **COORDINATED PATTERN WITH {pattern['contact'][:30]}...**")
             print(f"   Time: {pattern['time_start'].strftime('%Y-%m-%d %H:%M')} → {pattern['time_end'].strftime('%H:%M')}")
             print(f"   Duration: {pattern['duration_minutes']:.1f} minutes")
             print(f"   Media Used: {', '.join(pattern['media_used'])}")
@@ -1815,7 +1950,7 @@ def enhanced_suspicious_analysis(timeline, user_phone=None):
                 print(f"     {j}. {dir_symbol} {medium}: {content}...")
             
             # Add forensic interpretation
-            print(f"\n   **FORENSIC INTERPRETATION:**")
+            print(f"\n   🔍 **FORENSIC INTERPRETATION:**")
             if len(pattern['media_used']) == 3:
                 print(f"     • SMS → Call → Email pattern detected")
                 print(f"     • **HIGH RISK**: Coordinated communication across all major channels")
@@ -1825,11 +1960,6 @@ def enhanced_suspicious_analysis(timeline, user_phone=None):
                 print(f"     • Could indicate: Detailed discussion, confirmation seeking, or layered communication")
     
     return coordinated_patterns
-
-def detect_coordinated_communications(timeline, user_phone=None):
-    """Detect coordinated communications across multiple channels"""
-    # This is a placeholder - implement your detection logic
-    return []
 
 # ============================================================================
 # ENHANCED FUNCTIONS FOR CLEAR SOURCE/DESTINATION DISPLAY
@@ -1871,21 +2001,14 @@ def get_communication_details(event, user_phone):
     return contact, user_phone if user_phone else "User's Phone", source_type, 'UNKNOWN', ''
 
 def display_timeline_events(timeline, user_phone=None):
-    """Display all timeline events with clear source/destination"""
-    print("\n" + "-"*120)
-    print(" TIMELINE EVENTS - ALL COMMUNICATIONS")
-    print("-"*120)
-    
+    print("\n")
+    print(f"{emoji.emojize(":hourglass_done:")} TIMELINE EVENTS - ALL COMMUNICATIONS")
     if not timeline:
         print("No timeline events available.")
         return
-    
     total_events = len(timeline)
-    print(f"\n📊 TOTAL COMMUNICATION EVENTS: {total_events:,}")
-    
     if user_phone:
-        print(f"📱 USER'S PHONE NUMBER: {user_phone}")
-    
+        print(f"")
     # Group by communication type
     print("\n" + "-"*120)
     print(" 1. SMS MESSAGES")
@@ -1920,9 +2043,9 @@ def display_timeline_events(timeline, user_phone=None):
         # SMS Statistics
         incoming_sms = [e for e in sms_events if e.get('type') == 'INCOMING']
         outgoing_sms = [e for e in sms_events if e.get('type') == 'OUTGOING']
-        print(f"\n📱 SMS STATISTICS:")
-        print(f"   • Received SMS: {len(incoming_sms):,} ({len(incoming_sms)/len(sms_events)*100:.1f}%)")
-        print(f"   • Sent SMS: {len(outgoing_sms):,} ({len(outgoing_sms)/len(sms_events)*100:.1f}%)")
+        print(f"\n{emoji.emojize(":mobile_phone_with_arrow:")} SMS STATISTICS:")
+        print(f"   • Incoming: {len(incoming_sms):,} ({len(incoming_sms)/len(sms_events)*100:.1f}%)")
+        print(f"   • Outgoing: {len(outgoing_sms):,} ({len(outgoing_sms)/len(sms_events)*100:.1f}%)")
         
     else:
         print("No SMS messages found.")
@@ -1962,7 +2085,7 @@ def display_timeline_events(timeline, user_phone=None):
         avg_duration = total_duration / len(call_events) if call_events else 0
         
         call_types = Counter(e.get('type', 'UNKNOWN') for e in call_events)
-        print(f"\n📞 CALL STATISTICS:")
+        print(f"\n{emoji.emojize(":telephone_receiver:")} CALL STATISTICS:")
         print(f"   • Total call duration: {total_duration//3600}h {(total_duration%3600)//60}m {total_duration%60}s")
         print(f"   • Average call duration: {avg_duration:.1f} seconds")
         print(f"   • Call types:")
@@ -2008,7 +2131,7 @@ def display_timeline_events(timeline, user_phone=None):
             unique_senders.add(source)
             unique_recipients.add(destination)
         
-        print(f"\n📧 EMAIL STATISTICS:")
+        print(f"\n{emoji.emojize(":e-mail:")} EMAIL STATISTICS:")
         print(f"   • Unique senders: {len(unique_senders):,}")
         print(f"   • Unique recipients: {len(unique_recipients):,}")
         
@@ -2019,10 +2142,6 @@ def display_timeline_events(timeline, user_phone=None):
     print("\n" + "-"*120)
     print(" COMMUNICATION SUMMARY")
     print("-"*120)
-    print(f"\n📈 TOTAL EVENTS: {total_events:,}")
-    print(f"   • SMS Messages: {len(sms_events):,} ({len(sms_events)/total_events*100:.1f}%)")
-    print(f"   • Phone Calls: {len(call_events):,} ({len(call_events)/total_events*100:.1f}%)")
-    print(f"   • Emails: {len(email_events):,} ({len(email_events)/total_events*100:.1f}%)")
     
     # Time range
     if timeline:
@@ -2044,20 +2163,46 @@ def display_timeline_events(timeline, user_phone=None):
             print(f"   • Busiest day: {busiest_date} ({daily_counts[busiest_date]:,} events)")
 
 def view_detailed_analysis(timeline, sms_data, call_data, email_data, user_phone=None):
-    """Display detailed analysis with source/destination information"""
-    print("\n" + "-"*120)
-    print(" DETAILED COMMUNICATION ANALYSIS")
-    print("-"*120)
+    print("\n")
+    display(HTML("""
+    <style>
+        .progress-bar { 
+            border-radius: 50px !important; 
+            background: linear-gradient(90deg, #8a2be2 0%, #da70d6 100%) !important;
+        }
+        .progress-bar-success {
+            background: #006400 !important;
+        }
+        .progress { 
+            border-radius: 50px !important; 
+            background-color: #f0f0f0 !important; 
+        }
+    </style>
+    """))
+
+    # 2. Loop with "Circling" Animation Emojis
+    total_steps = 24
+    step = 0
+    spinner = ["🌑", "🌒", "🌓", "🌔", "🌕", "🌖", "🌗", "🌘"]  # Moon phases for circling
+
+    for cycle in range(3):
+        for char in spinner:
+            step += 1
+            percent = int((step / total_steps) * 100)
+            sys.stdout.write(f"\r{char} Analyzing data... {percent}%")
+            sys.stdout.flush()
+            time.sleep(0.1)
+    sys.stdout.write("\r" + " " * 40 + "\r")
+    sys.stdout.write(f"\r{emoji.emojize(":check_box_with_check:")} Analysis Completed \n")
+    sys.stdout.flush()
     
     if not timeline:
         print("No timeline data available.")
         return
     
     total_events = len(timeline)
-    print(f"\n📊 TOTAL COMMUNICATION EVENTS: {total_events:,}")
-    
     if user_phone:
-        print(f"📱 USER'S PHONE NUMBER: {user_phone}")
+        print(f"")
     
     # 1. Communication Flow Analysis
     print("\n" + "-"*120)
@@ -2090,7 +2235,6 @@ def view_detailed_analysis(timeline, sms_data, call_data, email_data, user_phone
     print("-"*120)
     
     contact_counts, contact_details = extract_contacts(sms_data, call_data, email_data)
-    print(f"\n👥 UNIQUE CONTACTS: {len(contact_counts):,}")
     
     # Show incoming communications (to user)
     incoming_communications = Counter()
@@ -2112,7 +2256,7 @@ def view_detailed_analysis(timeline, sms_data, call_data, email_data, user_phone
             outgoing_communications[destination] += 1
     
     if incoming_communications:
-        print(f"\n📥 COMMUNICATIONS RECEIVED BY USER:")
+        print(f"\n{emoji.emojize(":inbox_tray:")} COMMUNICATIONS RECEIVED BY USER:")
         print("-" * 80)
         print(f"{'Rank':<5} {'From':<40} {'Count':<10} {'%':<8}")
         print("-" * 80)
@@ -2124,7 +2268,7 @@ def view_detailed_analysis(timeline, sms_data, call_data, email_data, user_phone
             print(f"{i:<5} {contact_display:<40} {count:<10,} {percentage:>7.1f}%")
     
     if outgoing_communications:
-        print(f"\n📤 COMMUNICATIONS SENT BY USER:")
+        print(f"\n{emoji.emojize(":outbox_tray:")} COMMUNICATIONS SENT BY USER:")
         print("-" * 80)
         print(f"{'Rank':<5} {'To':<40} {'Count':<10} {'%':<8}")
         print("-" * 80)
@@ -2135,44 +2279,9 @@ def view_detailed_analysis(timeline, sms_data, call_data, email_data, user_phone
             contact_display = contact[:38] + "..." if len(contact) > 38 else contact
             print(f"{i:<5} {contact_display:<40} {count:<10,} {percentage:>7.1f}%")
     
-    # 3. Communication Pattern Analysis
-    print("\n" + "-"*120)
-    print(" 3. COMMUNICATION PATTERNS")
-    print("-"*120)
-    
-    # Analyze communication patterns by type
-    communication_patterns = defaultdict(lambda: defaultdict(int))
-    
-    for event in timeline:
-        source, destination, medium, direction, _ = get_communication_details(event, user_phone)
-        pattern_key = f"{source} ↔ {destination}"
-        communication_patterns[pattern_key][medium] += 1
-    
-    print(f"\nTOP COMMUNICATION PATTERNS BY MEDIUM:")
-    print("-" * 100)
-    print(f"{'Rank':<5} {'Parties':<40} {'SMS':<8} {'Calls':<8} {'Emails':<8} {'Total':<10}")
-    print("-" * 100)
-    
-    # Calculate total communications per pattern
-    pattern_totals = []
-    for pattern, mediums in communication_patterns.items():
-        total = sum(mediums.values())
-        pattern_totals.append((pattern, total, mediums))
-    
-    # Sort by total communications
-    pattern_totals.sort(key=lambda x: x[1], reverse=True)
-    
-    for i, (pattern, total, mediums) in enumerate(pattern_totals[:15], 1):
-        pattern_display = pattern[:38] + "..." if len(pattern) > 38 else pattern
-        print(f"{i:<5} {pattern_display:<40} "
-              f"{mediums.get('SMS', 0):<8} "
-              f"{mediums.get('CALL', 0):<8} "
-              f"{mediums.get('EMAIL', 0):<8} "
-              f"{total:<10,}")
-    
     # 4. Temporal Analysis
     print("\n" + "-"*120)
-    print(" 4. TEMPORAL ANALYSIS")
+    print(" 3. TEMPORAL ANALYSIS")
     print("-"*120)
     
     timeline_sorted = sorted(timeline, key=lambda x: x['timestamp'])
@@ -2181,7 +2290,7 @@ def view_detailed_analysis(timeline, sms_data, call_data, email_data, user_phone
         latest = timeline_sorted[-1]['timestamp']
         days_span = (latest - earliest).days + 1
         
-        print(f"\n📅 INVESTIGATION PERIOD: {days_span} days")
+        print(f"\n{emoji.emojize(":calendar:")} INVESTIGATION PERIOD: {days_span} days")
         print(f"   • From: {earliest.strftime('%Y-%m-%d %H:%M')}")
         print(f"   • To: {latest.strftime('%Y-%m-%d %H:%M')}")
         print(f"   • Average daily communications: {total_events/days_span:.1f}")
@@ -2193,7 +2302,7 @@ def view_detailed_analysis(timeline, sms_data, call_data, email_data, user_phone
             hourly_counts[hour] += 1
         
         peak_hour = max(hourly_counts, key=hourly_counts.get)
-        print(f"\n⏰ PEAK ACTIVITY HOUR: {peak_hour:02d}:00 ({hourly_counts[peak_hour]:,} events)")
+        print(f"\n{emoji.emojize(":stopwatch:")} PEAK ACTIVITY HOUR: {peak_hour:02d}:00 ({hourly_counts[peak_hour]:,} events)")
         
         # Communication by time of day
         morning = sum(hourly_counts[h] for h in range(6, 12))
@@ -2201,7 +2310,7 @@ def view_detailed_analysis(timeline, sms_data, call_data, email_data, user_phone
         evening = sum(hourly_counts[h] for h in range(18, 24))
         night = sum(hourly_counts[h] for h in range(0, 6))
         
-        print(f"\n🌅 COMMUNICATION BY TIME OF DAY:")
+        print(f"\n{emoji.emojize(":sunrise:")} COMMUNICATION BY TIME OF DAY:")
         print(f"   • Morning (6AM-12PM): {morning:,} ({morning/total_events*100:.1f}%)")
         print(f"   • Afternoon (12PM-6PM): {afternoon:,} ({afternoon/total_events*100:.1f}%)")
         print(f"   • Evening (6PM-12AM): {evening:,} ({evening/total_events*100:.1f}%)")
@@ -2209,7 +2318,7 @@ def view_detailed_analysis(timeline, sms_data, call_data, email_data, user_phone
     
     # 5. Forensic Category Analysis with Reasons
     print("\n" + "="*120)
-    print(" 5. FORENSIC CATEGORY ANALYSIS WITH REASONS")
+    print(" 4. ANALYSIS WITH REASONS")
     print("="*120)
     
     # Group events by category and collect reasons
@@ -2224,7 +2333,7 @@ def view_detailed_analysis(timeline, sms_data, call_data, email_data, user_phone
     for category in suspicious_categories:
         if category_events[category]:
             events = category_events[category]
-            print(f"\n🔍 {category} COMMUNICATIONS: {len(events):,} events")
+            print(f"\n{emoji.emojize(":speech_balloon:")} {category} COMMUNICATIONS: {len(events):,} events")
             
             # Show top reasons for this category
             reason_counter = Counter()
@@ -2251,7 +2360,7 @@ def view_detailed_analysis(timeline, sms_data, call_data, email_data, user_phone
                     print(f"      Reasons: {', '.join(example['reasons'][:3])}")
 
 def suspicious_communications_analysis(timeline, user_phone=None):
-    """Analyze and display suspicious communications with detailed reasons"""
+
     print("\n" + "="*120)
     print(" SUSPICIOUS COMMUNICATIONS ANALYSIS")
     print("="*120)
@@ -2261,7 +2370,7 @@ def suspicious_communications_analysis(timeline, user_phone=None):
         return
     
     if user_phone:
-        print(f"📱 USER'S PHONE NUMBER: {user_phone}")
+        print(f"")
     
     # Get suspicious events based on forensic tags
     suspicious_tags = ['SUSPICIOUS', 'FINANCIAL', 'URGENT', 'INTERNATIONAL', 'EXTENDED_COMM', 'SPAM']
@@ -2270,62 +2379,10 @@ def suspicious_communications_analysis(timeline, user_phone=None):
     total_events = len(timeline)
     suspicious_count = len(suspicious_events)
     
-    print(f"\n🔍 SUSPICIOUS COMMUNICATIONS DETECTED: {suspicious_count:,} of {total_events:,} total events")
+    print(f"\n{emoji.emojize(":no_entry:")} SUSPICIOUS COMMUNICATIONS DETECTED: {suspicious_count:,} of {total_events:,} total events")
     print(f"   • Suspicious Rate: {suspicious_count/total_events*100:.1f}%")
     
     if suspicious_events:
-        # Group by suspicious category with detailed breakdown
-        print("\n" + "-"*120)
-        print(" DETAILED SUSPICIOUS COMMUNICATIONS BREAKDOWN")
-        print("-"*120)
-        
-        # Create detailed breakdown by category
-        category_details = defaultdict(lambda: {
-            'count': 0,
-            'reasons': Counter(),
-            'contacts': Counter(),
-            'times': []
-        })
-        
-        for event in suspicious_events:
-            category = event['forensic_tag']
-            details = category_details[category]
-            details['count'] += 1
-            
-            # Count reasons
-            for reason in event.get('reasons', []):
-                details['reasons'][reason] += 1
-            
-            # Count contacts
-            contact = event.get('contact', 'Unknown')
-            details['contacts'][contact] += 1
-            
-            # Record time
-            details['times'].append(event['timestamp'])
-        
-        # Display detailed breakdown
-        print(f"\n{'Category':<20} {'Count':>10} {'% of Suspicious':>15} {'Top Reason':<40} {'Risk':<10}")
-        print("-" * 95)
-        
-        for category, details in sorted(category_details.items(), key=lambda x: x[1]['count'], reverse=True):
-            count = details['count']
-            percentage = (count / suspicious_count) * 100
-            
-            # Get top reason
-            top_reason = "Unknown"
-            if details['reasons']:
-                top_reason, reason_count = details['reasons'].most_common(1)[0]
-                top_reason = f"{top_reason} ({reason_count}x)"
-            
-            # Determine risk level
-            if category in ['SUSPICIOUS', 'FINANCIAL']:
-                risk = 'HIGH'
-            elif category in ['URGENT', 'INTERNATIONAL']:
-                risk = 'MEDIUM'
-            else:
-                risk = 'LOW'
-            
-            print(f"{category:<20} {count:>10,} {percentage:>14.1f}% {top_reason:<40} {risk:<10}")
         
         # Show detailed suspicious communications with reasons
         print("\n" + "-"*120)
@@ -2533,463 +2590,8 @@ def suspicious_communications_analysis(timeline, user_phone=None):
         print("   • Forensic Priority: Low")
         print("   • Recommendation: Normal monitoring sufficient")
 
-# ============================================================================
-# FORMATTED TABLE DISPLAY FUNCTIONS
-# ============================================================================
-
-def display_dataset_overview(sms_data, call_data, email_data):
-    """Display dataset overview in table format"""
-    print("\n" + "-"*70)
-    print(" DATASET OVERVIEW")
-    print("-"*70)
+    #print("")
     
-    # Calculate statistics
-    sms_count = len(sms_data)
-    call_count = len(call_data)
-    email_count = len(email_data)
-    total_records = sms_count + call_count + email_count
-    
-    # Determine time spans
-    all_dates = []
-    if sms_data:
-        sms_dates = [d['timestamp'] for d in sms_data]
-        all_dates.extend(sms_dates)
-        sms_span = (max(sms_dates) - min(sms_dates)).days if sms_dates else 0
-    else:
-        sms_span = 0
-    
-    if call_data:
-        call_dates = [d['timestamp'] for d in call_data]
-        all_dates.extend(call_dates)
-        call_span = (max(call_dates) - min(call_dates)).days if call_dates else 0
-    else:
-        call_span = 0
-    
-    if email_data:
-        email_dates = [d['timestamp'] for d in email_data]
-        all_dates.extend(email_dates)
-        email_span = (max(email_dates) - min(email_dates)).days if email_dates else 0
-    else:
-        email_span = 0
-    
-    total_span = (max(all_dates) - min(all_dates)).days if all_dates else 0
-    
-    # Display table
-    print(f"\n{'Dataset':<20} {'Source Type':<20} {'Records':>10} {'File Format':<12} {'Time Span':<12}")
-    print("-" * 80)
-    print(f"{'SMS-Data.csv':<20} {'SMS Messages':<20} {sms_count:>10,} {'CSV':<12} {sms_span:>3} days")
-    print(f"{'CDR-Call-Details.csv':<20} {'Call Records':<20} {call_count:>10,} {'CSV':<12} {call_span:>3} days")
-    print(f"{'emails.csv':<20} {'Email Communications':<20} {email_count:>10,} {'CSV':<12} {email_span:>3} days")
-    print("-" * 80)
-    print(f"{'TOTAL':<20} {'All Sources':<20} {total_records:>10,} {'-':<12} {total_span:>3} days")
-    
-    return sms_count, call_count, email_count, total_records
-
-def display_data_statistics(sms_data, call_data, email_data):
-    """Display detailed data statistics"""
-    print("\n" + "-"*70)
-    print(" DATA STATISTICS")
-    print("-"*70)
-    
-    # SMS Statistics
-    if sms_data:
-        incoming_sms = sum(1 for s in sms_data if s.get('direction') == 'INCOMING')
-        outgoing_sms = sum(1 for s in sms_data if s.get('direction') == 'OUTGOING')
-        avg_msg_length = sum(len(str(s.get('message', ''))) for s in sms_data) / len(sms_data) if sms_data else 0
-        unique_sms_contacts = len(set(s.get('contact') for s in sms_data if s.get('contact')))
-        
-        print("\n📱 SMS Data Statistics:")
-        print("-" * 50)
-        print(f"    Total SMS messages: {len(sms_data):,}")
-        print(f"    Incoming messages: {incoming_sms:,} ({incoming_sms/len(sms_data)*100:.1f}%)")
-        print(f"    Outgoing messages: {outgoing_sms:,} ({outgoing_sms/len(sms_data)*100:.1f}%)")
-        print(f"    Average message length: {avg_msg_length:.0f} characters")
-        print(f"    Unique contacts: {unique_sms_contacts:,}")
-    else:
-        print("\n📱 SMS Data Statistics:")
-        print("-" * 50)
-        print("    No SMS data available")
-    
-    # Call Statistics
-    if call_data:
-        total_duration_sec = sum(c.get('duration', 0) for c in call_data)
-        total_duration_hrs = total_duration_sec / 3600
-        avg_duration = total_duration_sec / len(call_data) if call_data else 0
-        unique_callers = len(set(c.get('contact') for c in call_data if c.get('contact')))
-        international_calls = sum(1 for c in call_data if c.get('call_details', {}).get('intl_mins', 0) > 0)
-        
-        print("\n📞 Call Data Statistics:")
-        print("-" * 50)
-        print(f"    Total call records: {len(call_data):,}")
-        print(f"    Total call duration: {total_duration_hrs:.0f} hours")
-        print(f"    Average call duration: {avg_duration:.0f} seconds (approximately {avg_duration//60} minutes)")
-        print(f"    Unique callers: {unique_callers:,}")
-        print(f"    International calls: {international_calls:,} ({international_calls/len(call_data)*100:.1f}%)")
-    else:
-        print("\n📞 Call Data Statistics:")
-        print("-" * 50)
-        print("    No call data available")
-    
-    # Email Statistics
-    if email_data:
-        unique_senders = len(set(e.get('sender') for e in email_data if e.get('sender')))
-        unique_recipients = len(set(e.get('recipient') for e in email_data if e.get('recipient')))
-        avg_subject_len = sum(len(str(e.get('subject', ''))) for e in email_data) / len(email_data) if email_data else 0
-        
-        print("\n📧 Email Data Statistics:")
-        print("-" * 50)
-        print(f"    Total emails: {len(email_data):,}")
-        print(f"    Unique senders: {unique_senders:,}")
-        print(f"    Unique recipients: {unique_recipients:,}")
-        print(f"    Average subject length: {avg_subject_len:.0f} characters")
-    else:
-        print("\n📧 Email Data Statistics:")
-        print("-" * 50)
-        print("    No email data available")
-
-def display_loading_summary(sms_data, call_data, email_data):
-    """Display loading success summary"""
-    print("\n" + "-"*70)
-    print(" DATA LOADING SUMMARY")
-    print("-"*70)
-    
-    sms_loaded = len(sms_data)
-    call_loaded = len(call_data)
-    email_loaded = len(email_data)
-    
-    print(f"\n{'Data Source':<20} {'Records Found':>15} {'Successfully Loaded':>20} {'Success Rate':>12}")
-    print("-" * 70)
-    print(f"{'SMS Messages':<20} {sms_loaded:>15,} {sms_loaded:>20,} {'100%':>12}")
-    print(f"{'Phone Calls':<20} {call_loaded:>15,} {call_loaded:>20,} {'100%':>12}")
-    print(f"{'Emails':<20} {email_loaded:>15,} {email_loaded:>20,} {'100%':>12}")
-    print("-" * 70)
-    total_found = sms_loaded + call_loaded + email_loaded
-    print(f"{'Total':<20} {total_found:>15,} {total_found:>20,} {'100%':>12}")
-
-def display_temporal_distribution(timeline):
-    """Display temporal distribution in table format"""
-    if not timeline:
-        return
-    
-    print("\n" + "-"*70)
-    print(" TEMPORAL DISTRIBUTION")
-    print("-"*70)
-    
-    # Count events by time period
-    morning = sum(1 for e in timeline if 6 <= e['timestamp'].hour < 12)
-    afternoon = sum(1 for e in timeline if 12 <= e['timestamp'].hour < 18)
-    evening = sum(1 for e in timeline if 18 <= e['timestamp'].hour < 24)
-    night = sum(1 for e in timeline if 0 <= e['timestamp'].hour < 6)
-    
-    total = len(timeline)
-    
-    print(f"\n{'Time Period':<20} {'Events':>12} {'Percentage':>12}")
-    print("-" * 45)
-    print(f"{'Morning (6AM-12PM)':<20} {morning:>12,} {morning/total*100:>11.1f}%")
-    print(f"{'Afternoon (12PM-6PM)':<20} {afternoon:>12,} {afternoon/total*100:>11.1f}%")
-    print(f"{'Evening (6PM-12AM)':<20} {evening:>12,} {evening/total*100:>11.1f}%")
-    print(f"{'Night (12AM-6AM)':<20} {night:>12,} {night/total*100:>11.1f}%")
-    print("-" * 45)
-    print(f"{'Total':<20} {total:>12,} {100:>11.1f}%")
-
-def display_daily_activity_pattern(timeline):
-    """Display daily activity pattern in table format"""
-    if not timeline:
-        return
-    
-    print("\n" + "-"*70)
-    print(" DAILY ACTIVITY PATTERN")
-    print("-"*70)
-    
-    # Group by day of week
-    day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    day_counts = {day: {'SMS': 0, 'Calls': 0, 'Emails': 0, 'Total': 0} for day in day_names}
-    
-    for event in timeline:
-        day_name = event['timestamp'].strftime('%A')
-        source = event['source']
-        
-        if source == 'SMS':
-            day_counts[day_name]['SMS'] += 1
-        elif source == 'CALL':
-            day_counts[day_name]['Calls'] += 1
-        elif source == 'EMAIL':
-            day_counts[day_name]['Emails'] += 1
-        
-        day_counts[day_name]['Total'] += 1
-    
-    total_events = len(timeline)
-    
-    print(f"\n{'Day':<12} {'SMS':>8} {'Calls':>8} {'Emails':>8} {'Total':>10} {'% of Week':>12}")
-    print("-" * 60)
-    
-    for day in day_names:
-        counts = day_counts[day]
-        percentage = counts['Total'] / total_events * 100
-        print(f"{day:<12} {counts['SMS']:>8,} {counts['Calls']:>8,} {counts['Emails']:>8,} {counts['Total']:>10,} {percentage:>11.1f}%")
-    
-    print("-" * 60)
-    print(f"{'TOTAL':<12} {sum(d['SMS'] for d in day_counts.values()):>8,} {sum(d['Calls'] for d in day_counts.values()):>8,} {sum(d['Emails'] for d in day_counts.values()):>8,} {total_events:>10,} {100:>11.1f}%")
-
-def display_category_distribution(timeline):
-    """Display forensic category distribution in table format"""
-    if not timeline:
-        return
-    
-    print("\n" + "-"*70)
-    print(" CATEGORY DISTRIBUTION")
-    print("-"*70)
-    
-    category_reasons = {
-        'ROUTINE': "Normal communication",
-        'SUSPICIOUS': "Suspicious keywords, short messages",
-        'FINANCIAL': "Payment/banking keywords",
-        'URGENT': "Urgency indicators",
-        'INTERNATIONAL': "International calls/emails",
-        'EXTENDED_COMM': "Long calls (>1 hour)",
-        'SPAM': "Spam/phishing patterns"
-    }
-    
-    category_counts = Counter(e.get('forensic_tag', 'ROUTINE') for e in timeline)
-    total = len(timeline)
-    
-    print(f"\n{'Category':<18} {'Count':>12} {'Percentage':>12} {'Primary Reasons':<40}")
-    print("-" * 85)
-    
-    for category in ['ROUTINE', 'SUSPICIOUS', 'FINANCIAL', 'URGENT', 'INTERNATIONAL', 'EXTENDED_COMM', 'SPAM']:
-        count = category_counts.get(category, 0)
-        percentage = count / total * 100 if total > 0 else 0
-        reason = category_reasons.get(category, "Other")
-        print(f"{category:<18} {count:>12,} {percentage:>11.1f}% {reason:<40}")
-    
-    print("-" * 85)
-    print(f"{'TOTAL':<18} {total:>12,} {100:>11.1f}% {'-':<40}")
-        
-def display_top_suspicious_reasons(timeline):
-    """Display top suspicious reasons"""
-    suspicious_tags = ['SUSPICIOUS', 'FINANCIAL', 'URGENT', 'INTERNATIONAL', 'EXTENDED_COMM', 'SPAM']
-    suspicious_events = [e for e in timeline if e['forensic_tag'] in suspicious_tags]
-    
-    if not suspicious_events:
-        return
-    
-    print("\n" + "-"*70)
-    print(" TOP SUSPICIOUS REASONS")
-    print("-"*70)
-    
-    reason_counter = Counter()
-    for event in suspicious_events:
-        for reason in event.get('reasons', []):
-            reason_counter[reason] += 1
-    
-    total_suspicious = len(suspicious_events)
-    
-    print(f"\n{'Reason':<50} {'Count':>12} {'Percentage of Suspicious':>25}")
-    print("-" * 90)
-    
-    for reason, count in reason_counter.most_common(10):
-        percentage = count / total_suspicious * 100
-        print(f"{reason:<50} {count:>12,} {percentage:>24.1f}%")
-    
-    print("-" * 90)
-        
-# ============================================================================
-# VISUALIZATION FUNCTIONS
-# ============================================================================
-
-def check_matplotlib():
-    """Check if matplotlib is installed and import it"""
-    try:
-        import matplotlib
-        import matplotlib.pyplot as plt
-        import seaborn as sns
-        return True, plt, sns
-    except ImportError:
-        print(" Matplotlib/Seaborn not installed. Install with: pip install matplotlib seaborn")
-        return False, None, None
-
-def create_jupyter_dashboard(timeline):
-    """Create interactive dashboard in Jupyter"""
-    if not IN_JUPYTER:
-        return
-    
-    import ipywidgets as widgets
-    from IPython.display import display, clear_output
-    
-    # Create interactive controls
-    date_range = widgets.DateRangePicker(
-        description='Date Range',
-        value=(timeline[0]['timestamp'], timeline[-1]['timestamp'])
-    )
-    
-    risk_filter = widgets.Dropdown(
-        options=['All', 'High Risk', 'Medium Risk', 'Low Risk'],
-        value='All',
-        description='Risk Level:'
-    )
-    
-    def update_dashboard(change):
-        clear_output(wait=True)
-        # Filter and display based on selections
-        filtered = filter_timeline(timeline, date_range.value, risk_filter.value)
-        display_timeline_events(filtered)
-    
-    # Display controls
-    display(date_range, risk_filter)
-    date_range.observe(update_dashboard, names='value')
-    risk_filter.observe(update_dashboard, names='value')
-
-def filter_timeline(timeline, date_range, risk_level):
-    """Filter timeline based on criteria"""
-    # This is a placeholder - implement your filtering logic
-    return timeline
-
-def create_simple_visualizations(timeline, sms_data, call_data, email_data):
-    """Create simple visualizations"""
-    print("\n" + "-"*70)
-    print(" CREATING VISUALIZATIONS")
-    print("-"*70)
-    
-    if not timeline:
-        print(" No data available for visualization.")
-        return
-    
-    # Check for matplotlib
-    matplotlib_available, plt, sns = check_matplotlib()
-    if not matplotlib_available:
-        return
-    
-    plt.style.use('seaborn-v0_8-darkgrid')
-    
-    # Convert to DataFrame for easier manipulation
-    df = pd.DataFrame(timeline)
-    df['timestamp'] = pd.to_datetime(df['timestamp'])
-    df['date'] = df['timestamp'].dt.date
-    df['hour'] = df['timestamp'].dt.hour
-    df['day_of_week'] = df['timestamp'].dt.day_name()
-    
-    # Get current timestamp for filenames
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    
-    try:
-        # 1. Communication Source Distribution
-        print("\n1. Communication Source Distribution...")
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
-        
-        source_counts = df['source'].value_counts()
-        colors = ['#FF6B6B', '#4ECDC4', '#45B7D1']
-        
-        # Pie chart
-        ax1.pie(source_counts.values, labels=source_counts.index, autopct='%1.1f%%',
-                colors=colors[:len(source_counts)], startangle=90)
-        ax1.set_title('Communication Source Distribution', fontsize=12, fontweight='bold')
-        
-        # Bar chart
-        bars = ax2.bar(range(len(source_counts)), source_counts.values, 
-                       color=colors[:len(source_counts)], alpha=0.8)
-        ax2.set_title('Communication Source Counts', fontsize=12, fontweight='bold')
-        ax2.set_xlabel('Source Type')
-        ax2.set_ylabel('Number of Events')
-        ax2.set_xticks(range(len(source_counts)))
-        ax2.set_xticklabels(source_counts.index, rotation=0)
-        
-        # Add value labels
-        for bar in bars:
-            height = bar.get_height()
-            ax2.text(bar.get_x() + bar.get_width()/2., height,
-                    f'{int(height):,}', ha='center', va='bottom', fontsize=10)
-        
-        plt.suptitle('Communication Sources Analysis', fontsize=14, fontweight='bold')
-        plt.tight_layout()
-        plt.savefig(f'communication_sources_{timestamp}.png', dpi=300, bbox_inches='tight')
-        print(f"   Saved: communication_sources_{timestamp}.png")
-        if IN_JUPYTER:
-            plt.show()
-        else:
-            plt.close()
-        
-        # 2. Hourly Activity Pattern
-        print("\n2. Hourly Activity Pattern...")
-        fig, ax = plt.subplots(figsize=(12, 6))
-        
-        hourly_counts = df['hour'].value_counts().sort_index()
-        bars = ax.bar(hourly_counts.index, hourly_counts.values, alpha=0.7, color='#4ECDC4')
-        
-        ax.set_title('Hourly Communication Activity', fontsize=14, fontweight='bold')
-        ax.set_xlabel('Hour of Day', fontsize=12)
-        ax.set_ylabel('Number of Events', fontsize=12)
-        ax.set_xticks(range(0, 24, 2))
-        ax.grid(True, alpha=0.3, axis='y')
-        
-        plt.tight_layout()
-        plt.savefig(f'hourly_activity_{timestamp}.png', dpi=300, bbox_inches='tight')
-        print(f"   Saved: hourly_activity_{timestamp}.png")
-        if IN_JUPYTER:
-            plt.show()
-        else:
-            plt.close()
-        
-        # 3. Day of Week Analysis
-        print("\n3. Day of Week Analysis...")
-        fig, ax = plt.subplots(figsize=(10, 6))
-        
-        day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-        day_counts = df['day_of_week'].value_counts().reindex(day_order)
-        
-        bars = ax.bar(range(len(day_counts)), day_counts.values, alpha=0.7, color='#FF6B6B')
-        ax.set_title('Activity by Day of Week', fontsize=14, fontweight='bold')
-        ax.set_xlabel('Day of Week', fontsize=12)
-        ax.set_ylabel('Number of Events', fontsize=12)
-        ax.set_xticks(range(len(day_counts)))
-        ax.set_xticklabels([d[:3] for d in day_counts.index], rotation=0)
-        ax.grid(True, alpha=0.3, axis='y')
-        
-        plt.tight_layout()
-        plt.savefig(f'day_of_week_{timestamp}.png', dpi=300, bbox_inches='tight')
-        print(f"   Saved: day_of_week_{timestamp}.png")
-        if IN_JUPYTER:
-            plt.show()
-        else:
-            plt.close()
-        
-        # 4. Forensic Category Distribution
-        print("\n4. Forensic Category Distribution...")
-        fig, ax = plt.subplots(figsize=(12, 6))
-        
-        category_counts = df['forensic_tag'].value_counts()
-        
-        # Sort categories by count
-        categories_sorted = category_counts.sort_values(ascending=False)
-        
-        bars = ax.bar(range(len(categories_sorted)), categories_sorted.values, alpha=0.7, color='#45B7D1')
-        ax.set_title('Forensic Category Distribution', fontsize=14, fontweight='bold')
-        ax.set_xlabel('Forensic Category', fontsize=12)
-        ax.set_ylabel('Number of Events', fontsize=12)
-        ax.set_xticks(range(len(categories_sorted)))
-        ax.set_xticklabels(categories_sorted.index, rotation=45, ha='right')
-        ax.grid(True, alpha=0.3, axis='y')
-        
-        # Add value labels
-        for bar in bars:
-            height = bar.get_height()
-            ax.text(bar.get_x() + bar.get_width()/2., height,
-                   f'{int(height):,}', ha='center', va='bottom', fontsize=9)
-        
-        plt.tight_layout()
-        plt.savefig(f'forensic_categories_{timestamp}.png', dpi=300, bbox_inches='tight')
-        print(f"   Saved: forensic_categories_{timestamp}.png")
-        if IN_JUPYTER:
-            plt.show()
-        else:
-            plt.close()
-        
-        print(f"\n All visualizations saved with timestamp: {timestamp}")
-        
-    except Exception as e:
-        print(f" Visualization error: {e}")
-        import traceback
-        traceback.print_exc()
-
 # ============================================================================
 # EXPORT FUNCTIONS
 # ============================================================================
@@ -3265,166 +2867,464 @@ def export_summary_json(timeline, sms_data, call_data, email_data, contact_count
         json.dump(summary, f, indent=2, default=str)
     
     print(f" Summary data saved to '{filename}'")
-
 # ============================================================================
-# ENHANCED MAIN FUNCTION
-# ============================================================================
-
-def enhance_main_menu(timeline, sms_data, call_data, email_data, user_phone=None):
-    
-    # Display all the formatted tables
-    sms_count, call_count, email_count, total_records = display_dataset_overview(sms_data, call_data, email_data)
-    display_data_statistics(sms_data, call_data, email_data)
-    display_loading_summary(sms_data, call_data, email_data)
-    display_temporal_distribution(timeline)
-    display_daily_activity_pattern(timeline)
-    display_category_distribution(timeline)
-    display_top_suspicious_reasons(timeline)
-        
-    # Main menu loop
-    while True:
-        print("\n" + "="*70)
-        print(" MULTI SOURCE EVENT RECONSTRUCTION SYSTEM")
-        print("="*70)
-        print("\n" + "-"*70)
-        print(" MAIN MENU")
-        print("-"*70)
-        print("1. Timeline Events (Show all communications)")
-        print("2. View Detailed Analysis")
-        print("3. Suspicious Communications Analysis")
-        print("4. Multi Channel Pattern Detection")
-        print("5. Visualize Data Patterns")
-        print("6. Export the Report")
-        print("7. Exit")
-        print("="*70)
-        
-        choice = input("\nSelect option (1-7): ").strip()
-        
-        if choice == '1':
-            display_timeline_events(timeline, user_phone)
-        
-        elif choice == '2':
-            view_detailed_analysis(timeline, sms_data, call_data, email_data, user_phone)
-        
-        elif choice == '3':
-            suspicious_communications_analysis(timeline, user_phone)
-        
-        elif choice == '4':
-            # Display multi-channel patterns in detailed format
-            if multi_channel_patterns:
-                display_multi_channel_patterns_summary(multi_channel_patterns)
-                print(f"\n📊 Detailed Multi-Channel Patterns Found: {len(multi_channel_patterns)}")
-                
-                # Show detailed patterns by risk level
-                high_risk = [p for p in multi_channel_patterns if p['risk_level'] == 'HIGH']
-                medium_risk = [p for p in multi_channel_patterns if p['risk_level'] == 'MEDIUM']
-                
-                if high_risk:
-                    print(f"\n🔴 HIGH RISK PATTERNS ({len(high_risk)}):")
-                    for pattern in high_risk[:5]:
-                        print(f"   • {pattern['contact'][:40]}...")
-                        print(f"     Channels: {' → '.join(pattern['media_used'])}")
-                        print(f"     Total events: {pattern['total_events']}")
-                
-                if medium_risk:
-                    print(f"\n🟡 MEDIUM RISK PATTERNS ({len(medium_risk)}):")
-                    for pattern in medium_risk[:5]:
-                        print(f"   • {pattern['contact'][:40]}...")
-                        print(f"     Channels: {' → '.join(pattern['media_used'])}")
-                        print(f"     Total events: {pattern['total_events']}")
-            else:
-                print("\nNo multi-channel patterns detected.")
-        
-        elif choice == '5':
-            create_simple_visualizations(timeline, sms_data, call_data, email_data)
-        
-        elif choice == '6':
-            export_forensic_report(timeline, sms_data, call_data, email_data, user_phone)
-        
-        elif choice == '7':
-            print("\n" + "="*70)
-            print(" ANALYSIS COMPLETED")
-            print("="*70)
-            print("Thank you for using the System.")
-            break
-        
-        else:
-            print(" Invalid option. Please select 1-7.")
-
-# ============================================================================
-# MAIN FUNCTION
+# FORMATTED TABLE DISPLAY FUNCTIONS
 # ============================================================================
 
-def main():
+def display_dataset_overview(sms_data, call_data, email_data):
     print("\n" + "-"*70)
-    print(" MULTI SOURCE EVENT RECONSTRUCTION SYSTEM")
+    print(f"{emoji.emojize(":card_index_dividers:")} DATASET OVERVIEW")
     print("-"*70)
-    try:
-        # Load data
-        sms_data, call_data, email_data = data()
-        
-        if not sms_data and not call_data and not email_data:
-            print("\n No data available. Exiting.")
-            return
-        
-        # Find user's phone number from data
-        print("\n" + "-"*70)
-        print(" USER IDENTIFICATION")
-        print("-"*70)
-        user_phone = find_user_phone_number(sms_data, call_data)
-        
-        if user_phone:
-            print(f"\n✅ USER'S PHONE NUMBER IDENTIFIED: {user_phone}")
-            print(f"   Based on communication frequency and patterns")
-        else:
-            print("\n⚠️  User's phone number could not be identified from data.")
-            print("   Analysis will continue with inferred relationships.")
-            user_phone = None
-        
-        # Create timeline with user's phone number
-        print("\n" + "-"*70)
-        print(" CREATING UNIFIED TIMELINE")
-        print("-"*70)
-        timeline = create_timeline(sms_data, call_data, email_data, user_phone)
-        
-        if not timeline:
-            print(" Failed to create timeline. Exiting.")
-            return
-        
-        # Display total events first
-        total_events = len(timeline)
-        print(f"\n📊 TOTAL COMMUNICATION EVENTS LOADED: {total_events:,}")
-        
-        # Show contact summary
-        contact_counts, _ = extract_contacts(sms_data, call_data, email_data)
-        print(f"👥 UNIQUE CONTACTS IDENTIFIED: {len(contact_counts):,}")
-        
-        if user_phone:
-            print(f"📱 USER'S PHONE NUMBER: {user_phone}")
-        
-        # Launch enhanced main menu with all formatted tables
-        enhance_main_menu(timeline, sms_data, call_data, email_data, user_phone)
     
-    except KeyboardInterrupt:
-        print("\n\n Analysis interrupted by user.")
+    # Calculate statistics
+    sms_count = len(sms_data)
+    call_count = len(call_data)
+    email_count = len(email_data)
+    total_records = sms_count + call_count + email_count
+    
+    # Determine time spans
+    all_dates = []
+    if sms_data:
+        sms_dates = [d['timestamp'] for d in sms_data]
+        all_dates.extend(sms_dates)
+        sms_span = (max(sms_dates) - min(sms_dates)).days if sms_dates else 0
+    else:
+        sms_span = 0
+    
+    if call_data:
+        call_dates = [d['timestamp'] for d in call_data]
+        all_dates.extend(call_dates)
+        call_span = (max(call_dates) - min(call_dates)).days if call_dates else 0
+    else:
+        call_span = 0
+    
+    if email_data:
+        email_dates = [d['timestamp'] for d in email_data]
+        all_dates.extend(email_dates)
+        email_span = (max(email_dates) - min(email_dates)).days if email_dates else 0
+    else:
+        email_span = 0
+    
+    total_span = (max(all_dates) - min(all_dates)).days if all_dates else 0
+    
+    # Display table
+    print(f"\n{'Dataset':<20} {'Source Type':<20} {'Records':>10} {'File Format':<12} {'Time Span':<12}")
+    print("-" * 80)
+    print(f"{'SMS-Data.csv':<20} {'SMS Messages':<20} {sms_count:>10,} {'CSV':<12} {sms_span:>3} days")
+    print(f"{'CDR-Call-Details.csv':<20} {'Call Records':<20} {call_count:>10,} {'CSV':<12} {call_span:>3} days")
+    print(f"{'emails.csv':<20} {'Email Communications':<20} {email_count:>10,} {'CSV':<12} {email_span:>3} days")
+    print("-" * 80)
+    print(f"{'TOTAL':<20} {'All Sources':<20} {total_records:>10,} {'-':<12} {total_span:>3} days")
+    
+    return sms_count, call_count, email_count, total_records
+
+def display_data_statistics(sms_data, call_data, email_data):
+    print("\n" + "-"*70)
+    print(f"{emoji.emojize(":input_numbers:")} DATA STATISTICS")
+    print("-"*70)
+    
+    # SMS Statistics
+    if sms_data:
+        incoming_sms = sum(1 for s in sms_data if s.get('direction') == 'INCOMING')
+        outgoing_sms = sum(1 for s in sms_data if s.get('direction') == 'OUTGOING')
+        avg_msg_length = sum(len(str(s.get('message', ''))) for s in sms_data) / len(sms_data) if sms_data else 0
+        unique_sms_contacts = len(set(s.get('contact') for s in sms_data if s.get('contact')))
+        
+        print("\n SMS Data Statistics:")
+        print("-" * 50)
+        print(f"    Total SMS messages: {len(sms_data):,}")
+        print(f"    Incoming messages: {incoming_sms:,} ({incoming_sms/len(sms_data)*100:.1f}%)")
+        print(f"    Outgoing messages: {outgoing_sms:,} ({outgoing_sms/len(sms_data)*100:.1f}%)")
+        print(f"    Average message length: {avg_msg_length:.0f} characters")
+        print(f"    Unique contacts: {unique_sms_contacts:,}")
+    else:
+        print("\n SMS Data Statistics:")
+        print("-" * 50)
+        print("    No SMS data available")
+    
+    # Call Statistics
+    if call_data:
+        total_duration_sec = sum(c.get('duration', 0) for c in call_data)
+        total_duration_hrs = total_duration_sec / 3600
+        avg_duration = total_duration_sec / len(call_data) if call_data else 0
+        unique_callers = len(set(c.get('contact') for c in call_data if c.get('contact')))
+        international_calls = sum(1 for c in call_data if c.get('call_details', {}).get('intl_mins', 0) > 0)
+        
+        print("\n Call Data Statistics:")
+        print("-" * 50)
+        print(f"    Total call records: {len(call_data):,}")
+        print(f"    Total call duration: {total_duration_hrs:.0f} hours")
+        print(f"    Average call duration: {avg_duration:.0f} seconds (approximately {avg_duration//60} minutes)")
+        print(f"    Unique callers: {unique_callers:,}")
+        print(f"    International calls: {international_calls:,} ({international_calls/len(call_data)*100:.1f}%)")
+    else:
+        print("\n Call Data Statistics:")
+        print("-" * 50)
+        print("    No call data available")
+    
+    # Email Statistics
+    if email_data:
+        unique_senders = len(set(e.get('sender') for e in email_data if e.get('sender')))
+        unique_recipients = len(set(e.get('recipient') for e in email_data if e.get('recipient')))
+        avg_subject_len = sum(len(str(e.get('subject', ''))) for e in email_data) / len(email_data) if email_data else 0
+        
+        print("\n Email Data Statistics:")
+        print("-" * 50)
+        print(f"    Total emails: {len(email_data):,}")
+        print(f"    Unique senders: {unique_senders:,}")
+        print(f"    Unique recipients: {unique_recipients:,}")
+        print(f"    Average subject length: {avg_subject_len:.0f} characters")
+    else:
+        print("\n Email Data Statistics:")
+        print("-" * 50)
+        print("    No email data available")
+
+def display_loading_summary(sms_data, call_data, email_data):
+    print("\n" + "-"*70)
+    print(f"{emoji.emojize(":memo:")} DATA LOADING SUMMARY")
+    print("-"*70)
+    
+    sms_loaded = len(sms_data)
+    call_loaded = len(call_data)
+    email_loaded = len(email_data)
+    
+    print(f"\n{'Data Source':<20} {'Records Found':>15} {'Successfully Loaded':>20} {'Success Rate':>12}")
+    print("-" * 70)
+    print(f"{'SMS Messages':<20} {sms_loaded:>15,} {sms_loaded:>20,} {'100%':>12}")
+    print(f"{'Phone Calls':<20} {call_loaded:>15,} {call_loaded:>20,} {'100%':>12}")
+    print(f"{'Emails':<20} {email_loaded:>15,} {email_loaded:>20,} {'100%':>12}")
+    print("-" * 70)
+    total_found = sms_loaded + call_loaded + email_loaded
+    print(f"{'Total':<20} {total_found:>15,} {total_found:>20,} {'100%':>12}")
+
+def display_temporal_distribution(timeline):
+    if not timeline:
+        return
+    
+    print("\n" + "-"*70)
+    print(f"{emoji.emojize(":hourglass_not_done:")} TEMPORAL DISTRIBUTION")
+    print("-"*70)
+    
+    # Count events by time period
+    morning = sum(1 for e in timeline if 6 <= e['timestamp'].hour < 12)
+    afternoon = sum(1 for e in timeline if 12 <= e['timestamp'].hour < 18)
+    evening = sum(1 for e in timeline if 18 <= e['timestamp'].hour < 24)
+    night = sum(1 for e in timeline if 0 <= e['timestamp'].hour < 6)
+    
+    total = len(timeline)
+    
+    print(f"\n{'Time Period':<20} {'Events':>12} {'Percentage':>12}")
+    print("-" * 45)
+    print(f"{'Morning (6AM-12PM)':<20} {morning:>12,} {morning/total*100:>11.1f}%")
+    print(f"{'Afternoon (12PM-6PM)':<20} {afternoon:>12,} {afternoon/total*100:>11.1f}%")
+    print(f"{'Evening (6PM-12AM)':<20} {evening:>12,} {evening/total*100:>11.1f}%")
+    print(f"{'Night (12AM-6AM)':<20} {night:>12,} {night/total*100:>11.1f}%")
+    print("-" * 45)
+    print(f"{'Total':<20} {total:>12,} {100:>11.1f}%")
+
+def display_daily_activity_pattern(timeline):
+    if not timeline:
+        return
+    
+    print("\n" + "-"*70)
+    print(f"{emoji.emojize(":bar_chart:")} DAILY ACTIVITY PATTERN")
+    print("-"*70)
+    
+    # Group by day of week
+    day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    day_counts = {day: {'SMS': 0, 'Calls': 0, 'Emails': 0, 'Total': 0} for day in day_names}
+    
+    for event in timeline:
+        day_name = event['timestamp'].strftime('%A')
+        source = event['source']
+        
+        if source == 'SMS':
+            day_counts[day_name]['SMS'] += 1
+        elif source == 'CALL':
+            day_counts[day_name]['Calls'] += 1
+        elif source == 'EMAIL':
+            day_counts[day_name]['Emails'] += 1
+        
+        day_counts[day_name]['Total'] += 1
+    
+    total_events = len(timeline)
+    
+    print(f"\n{'Day':<12} {'SMS':>8} {'Calls':>8} {'Emails':>8} {'Total':>10} {'% of Week':>12}")
+    print("-" * 60)
+    
+    for day in day_names:
+        counts = day_counts[day]
+        percentage = counts['Total'] / total_events * 100
+        print(f"{day:<12} {counts['SMS']:>8,} {counts['Calls']:>8,} {counts['Emails']:>8,} {counts['Total']:>10,} {percentage:>11.1f}%")
+    
+    print("-" * 60)
+    print(f"{'TOTAL':<12} {sum(d['SMS'] for d in day_counts.values()):>8,} {sum(d['Calls'] for d in day_counts.values()):>8,} {sum(d['Emails'] for d in day_counts.values()):>8,} {total_events:>10,} {100:>11.1f}%")
+
+def display_category_distribution(timeline):
+    if not timeline:
+        return
+    
+    print("\n" + "-"*70)
+    print(f"{emoji.emojize(":label:")} CATEGORY DISTRIBUTION")
+    print("-"*70)
+    
+    category_reasons = {
+        'ROUTINE': "Normal communication",
+        'SUSPICIOUS': "Suspicious keywords, short messages",
+        'FINANCIAL': "Payment/banking keywords",
+        'URGENT': "Urgency indicators",
+        'INTERNATIONAL': "International calls/emails",
+        'EXTENDED_COMM': "Long calls (>1 hour)",
+        'SPAM': "Spam/phishing patterns"
+    }
+    
+    category_counts = Counter(e.get('forensic_tag', 'ROUTINE') for e in timeline)
+    total = len(timeline)
+    
+    print(f"\n{'Category':<18} {'Count':>12} {'Percentage':>12} {'Primary Reasons':<40}")
+    print("-" * 85)
+    
+    for category in ['ROUTINE', 'SUSPICIOUS', 'FINANCIAL', 'URGENT', 'INTERNATIONAL', 'EXTENDED_COMM', 'SPAM']:
+        count = category_counts.get(category, 0)
+        percentage = count / total * 100 if total > 0 else 0
+        reason = category_reasons.get(category, "Other")
+        print(f"{category:<18} {count:>12,} {percentage:>11.1f}% {reason:<40}")
+    
+    print("-" * 85)
+    print(f"{'TOTAL':<18} {total:>12,} {100:>11.1f}% {'-':<40}")
+        
+def display_top_suspicious_reasons(timeline):
+    suspicious_tags = ['SUSPICIOUS', 'FINANCIAL', 'URGENT', 'INTERNATIONAL', 'EXTENDED_COMM', 'SPAM']
+    suspicious_events = [e for e in timeline if e['forensic_tag'] in suspicious_tags]
+    
+    if not suspicious_events:
+        return
+    
+    print("\n" + "-"*70)
+    print(f"{emoji.emojize(":triangular_flag:")} TOP SUSPICIOUS REASONS")
+    print("-"*70)
+    
+    reason_counter = Counter()
+    for event in suspicious_events:
+        for reason in event.get('reasons', []):
+            reason_counter[reason] += 1
+    
+    total_suspicious = len(suspicious_events)
+    
+    print(f"\n{'Reason':<50} {'Count':>12} {'Percentage of Suspicious':>25}")
+    print("-" * 90)
+    
+    for reason, count in reason_counter.most_common(10):
+        percentage = count / total_suspicious * 100
+        print(f"{reason:<50} {count:>12,} {percentage:>24.1f}%")
+    
+    print("-" * 90)
+        
+# ============================================================================
+# SIMPLIFIED VISUALIZATION FUNCTIONS
+# ============================================================================
+
+def check_matplotlib():
+    """Check if matplotlib is installed and import it"""
+    try:
+        import matplotlib
+        import matplotlib.pyplot as plt
+        import seaborn as sns
+        return True, plt, sns
+    except ImportError:
+        print(" Matplotlib/Seaborn not installed. Install with: pip install matplotlib seaborn")
+        return False, None, None
+
+def create_jupyter_dashboard(timeline):
+    """Create interactive dashboard in Jupyter"""
+    if not IN_JUPYTER:
+        return
+    
+    import ipywidgets as widgets
+    from IPython.display import display, clear_output
+    
+    # Create interactive controls
+    date_range = widgets.DateRangePicker(
+        description='Date Range',
+        value=(timeline[0]['timestamp'], timeline[-1]['timestamp'])
+    )
+    
+    risk_filter = widgets.Dropdown(
+        options=['All', 'High Risk', 'Medium Risk', 'Low Risk'],
+        value='All',
+        description='Risk Level:'
+    )
+    
+    def update_dashboard(change):
+        clear_output(wait=True)
+        # Filter and display based on selections
+        filtered = filter_timeline(timeline, date_range.value, risk_filter.value)
+        display_timeline_events(filtered)
+    
+    # Display controls
+    display(date_range, risk_filter)
+    date_range.observe(update_dashboard, names='value')
+    risk_filter.observe(update_dashboard, names='value')
+
+def create_simple_visualizations(timeline, sms_data, call_data, email_data):
+    """Create simple visualizations"""
+    print("\n" + "-"*70)
+    print(" CREATING VISUALIZATIONS")
+    print("-"*70)
+    
+    if not timeline:
+        print(" No data available for visualization.")
+        return
+    
+    # Check for matplotlib
+    matplotlib_available, plt, sns = check_matplotlib()
+    if not matplotlib_available:
+        return
+    
+    plt.style.use('seaborn-v0_8-darkgrid')
+    
+    # Convert to DataFrame for easier manipulation
+    df = pd.DataFrame(timeline)
+    df['timestamp'] = pd.to_datetime(df['timestamp'])
+    df['date'] = df['timestamp'].dt.date
+    df['hour'] = df['timestamp'].dt.hour
+    df['day_of_week'] = df['timestamp'].dt.day_name()
+    
+    # Get current timestamp for filenames
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    
+    try:
+        # 1. Communication Source Distribution
+        print("\n1. Communication Source Distribution...")
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
+        
+        source_counts = df['source'].value_counts()
+        colors = ['#FF6B6B', '#4ECDC4', '#45B7D1']
+        
+        # Pie chart
+        ax1.pie(source_counts.values, labels=source_counts.index, autopct='%1.1f%%',
+                colors=colors[:len(source_counts)], startangle=90)
+        ax1.set_title('Communication Source Distribution', fontsize=12, fontweight='bold')
+        
+        # Bar chart
+        bars = ax2.bar(range(len(source_counts)), source_counts.values, 
+                       color=colors[:len(source_counts)], alpha=0.8)
+        ax2.set_title('Communication Source Counts', fontsize=12, fontweight='bold')
+        ax2.set_xlabel('Source Type')
+        ax2.set_ylabel('Number of Events')
+        ax2.set_xticks(range(len(source_counts)))
+        ax2.set_xticklabels(source_counts.index, rotation=0)
+        
+        # Add value labels
+        for bar in bars:
+            height = bar.get_height()
+            ax2.text(bar.get_x() + bar.get_width()/2., height,
+                    f'{int(height):,}', ha='center', va='bottom', fontsize=10)
+        
+        plt.suptitle('Communication Sources Analysis', fontsize=14, fontweight='bold')
+        plt.tight_layout()
+        plt.savefig(f'communication_sources_{timestamp}.png', dpi=300, bbox_inches='tight')
+        print(f"   Saved: communication_sources_{timestamp}.png")
+        if IN_JUPYTER:
+            plt.show()
+        else:
+            plt.close()
+        
+        # 2. Hourly Activity Pattern
+        print("\n2. Hourly Activity Pattern...")
+        fig, ax = plt.subplots(figsize=(12, 6))
+        
+        hourly_counts = df['hour'].value_counts().sort_index()
+        bars = ax.bar(hourly_counts.index, hourly_counts.values, alpha=0.7, color='#4ECDC4')
+        
+        ax.set_title('Hourly Communication Activity', fontsize=14, fontweight='bold')
+        ax.set_xlabel('Hour of Day', fontsize=12)
+        ax.set_ylabel('Number of Events', fontsize=12)
+        ax.set_xticks(range(0, 24, 2))
+        ax.grid(True, alpha=0.3, axis='y')
+        
+        plt.tight_layout()
+        plt.savefig(f'hourly_activity_{timestamp}.png', dpi=300, bbox_inches='tight')
+        print(f"   Saved: hourly_activity_{timestamp}.png")
+        if IN_JUPYTER:
+            plt.show()
+        else:
+            plt.close()
+        
+        # 3. Day of Week Analysis
+        print("\n3. Day of Week Analysis...")
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        day_counts = df['day_of_week'].value_counts().reindex(day_order)
+        
+        bars = ax.bar(range(len(day_counts)), day_counts.values, alpha=0.7, color='#FF6B6B')
+        ax.set_title('Activity by Day of Week', fontsize=14, fontweight='bold')
+        ax.set_xlabel('Day of Week', fontsize=12)
+        ax.set_ylabel('Number of Events', fontsize=12)
+        ax.set_xticks(range(len(day_counts)))
+        ax.set_xticklabels([d[:3] for d in day_counts.index], rotation=0)
+        ax.grid(True, alpha=0.3, axis='y')
+        
+        plt.tight_layout()
+        plt.savefig(f'day_of_week_{timestamp}.png', dpi=300, bbox_inches='tight')
+        print(f"   Saved: day_of_week_{timestamp}.png")
+        if IN_JUPYTER:
+            plt.show()
+        else:
+            plt.close()
+        
+        # 4. Forensic Category Distribution
+        print("\n4. Forensic Category Distribution...")
+        fig, ax = plt.subplots(figsize=(12, 6))
+        
+        category_counts = df['forensic_tag'].value_counts()
+        
+        # Sort categories by count
+        categories_sorted = category_counts.sort_values(ascending=False)
+        
+        bars = ax.bar(range(len(categories_sorted)), categories_sorted.values, alpha=0.7, color='#45B7D1')
+        ax.set_title('Forensic Category Distribution', fontsize=14, fontweight='bold')
+        ax.set_xlabel('Forensic Category', fontsize=12)
+        ax.set_ylabel('Number of Events', fontsize=12)
+        ax.set_xticks(range(len(categories_sorted)))
+        ax.set_xticklabels(categories_sorted.index, rotation=45, ha='right')
+        ax.grid(True, alpha=0.3, axis='y')
+        
+        # Add value labels
+        for bar in bars:
+            height = bar.get_height()
+            ax.text(bar.get_x() + bar.get_width()/2., height,
+                   f'{int(height):,}', ha='center', va='bottom', fontsize=9)
+        
+        plt.tight_layout()
+        plt.savefig(f'forensic_categories_{timestamp}.png', dpi=300, bbox_inches='tight')
+        print(f"   Saved: forensic_categories_{timestamp}.png")
+        if IN_JUPYTER:
+            plt.show()
+        else:
+            plt.close()
+        
+        print(f"\n All visualizations saved with timestamp: {timestamp}")
+        
     except Exception as e:
-        print(f"\n Unexpected error: {e}")
+        print(f" Visualization error: {e}")
         import traceback
         traceback.print_exc()
 
 # ============================================================================
-# JUPYTER FUNCTION
+# MAIN FUNCTION WITH SIMPLIFIED MENU
 # ============================================================================
 
 def main_jupyter():
-    """Jupyter-optimized main function"""
+
     if not IN_JUPYTER:
         print("Not running in Jupyter. Use main() instead.")
         return
     
     from IPython.display import display, Markdown, HTML
     
-    display(Markdown("# 🔍 Analysis"))
+    display(Markdown("# 🔍 Digital Analysis"))
     
     # Load data
     sms_data, call_data, email_data = data()
@@ -3440,11 +3340,256 @@ def main_jupyter():
     timeline = create_timeline(sms_data, call_data, email_data, user_phone)
     
     # Display summary
-    enhance_main_menu(timeline, sms_data, call_data, email_data, user_phone)
+    display_summary_jupyter(timeline, user_phone)
+    
+    # Create dashboard
+    create_jupyter_dashboard(timeline)
 
-# ============================================================================
-# SCRIPT ENTRY POINT
-# ============================================================================
+def main():
+
+    print("\n" + "="*70)
+    print(" MULTI SOURCE EVENT RECONSTRUCTION SYSTEM ")
+    print("="*70)
+    
+    try:
+        # Load data
+        sms_data, call_data, email_data = data()
+        
+        if not sms_data and not call_data and not email_data:
+            print("\n No data available. Exiting.")
+            return
+        
+        # Find user's phone number from data
+        print("\n" + "-"*70)
+        print(f"{emoji.emojize(":bust_in_silhouette:")} USER IDENTIFICATION")
+        print("-"*70)
+        user_phone = find_user_phone_number(sms_data, call_data)
+        
+        if user_phone:
+            print(f"\n USER'S PHONE NUMBER IDENTIFIED: {user_phone}")
+            print(f"   Based on communication frequency and patterns")
+        else:
+            print("\n⚠️  User's phone number could not be identified from data.")
+            print("   Analysis will continue with inferred relationships.")
+            user_phone = None
+        
+        # Create timeline with user's phone number
+        timeline = create_timeline(sms_data, call_data, email_data, user_phone)
+        
+        if not timeline:
+            print(" Failed to create timeline. Exiting.")
+            return
+        
+        # Display dataset overview (fixed - now using loaded data)
+        sms_count, call_count, email_count, total_records = display_dataset_overview(sms_data, call_data, email_data)
+        
+        # Display data statistics
+        display_data_statistics(sms_data, call_data, email_data)
+        
+        # Display loading summary
+        display_loading_summary(sms_data, call_data, email_data)
+        
+        # Display temporal distribution
+        display_temporal_distribution(timeline)
+        
+        # Display daily activity pattern
+        display_daily_activity_pattern(timeline)
+        
+        # Display category distribution
+        display_category_distribution(timeline)
+        
+        # Display top suspicious reasons
+        display_top_suspicious_reasons(timeline)
+        
+        # Show total events
+        total_events = len(timeline)
+        print(f" ")
+        
+        # Show contact summary
+        contact_counts, _ = extract_contacts(sms_data, call_data, email_data)
+        print(f"{emoji.emojize(":busts_in_silhouette:")} UNIQUE CONTACTS IDENTIFIED: {len(contact_counts):,}")
+        
+        if user_phone:
+            print(f"")
+        
+        # Initial analysis
+        print("\n" + "-"*70)
+        print(f"{emoji.emojize(":microscope:")} INITIAL ANALYSIS")
+        print("-"*70)
+        
+        # Count suspicious communications
+        suspicious_tags = ['SUSPICIOUS', 'FINANCIAL', 'URGENT', 'INTERNATIONAL', 'EXTENDED_COMM', 'SPAM']
+        suspicious_events = [e for e in timeline if e['forensic_tag'] in suspicious_tags]
+        print(f" SUSPICIOUS COMMUNICATIONS: {len(suspicious_events):,} ({len(suspicious_events)/total_events*100:.1f}%)")
+        
+        # Show top suspicious reasons
+        if suspicious_events:
+            reason_counter = Counter()
+            for event in suspicious_events:
+                for reason in event.get('reasons', []):
+                    reason_counter[reason] += 1
+            
+            if reason_counter:
+                print(f"   Top suspicious reasons:")
+                for reason, count in reason_counter.most_common(3):
+                    print(f"      • {reason}: {count:,}")
+        
+        # Main menu loop
+        while True:
+            print("\n" + "="*70)
+            print(f"{emoji.emojize(":control_knobs:")} MAIN MENU")
+            print("="*70)
+            print("1. Timeline Events (Show all communications)")
+            print("2. View Detailed Analysis")
+            print("3. Suspicious Communications Analysis")
+            print("4. Multi Channel Pattern Detection")
+            print("5. Visualize Data Patterns")
+            print("6. Export the Report")
+            print("7. Exit")
+            print("="*70)
+            
+            choice = input("\nSelect option (1-7): ").strip()
+            
+            if choice == '1':
+                display_timeline_events(timeline, user_phone)
+            
+            elif choice == '2':
+                view_detailed_analysis(timeline, sms_data, call_data, email_data, user_phone)
+            
+            elif choice == '3':
+                suspicious_communications_analysis(timeline, user_phone)
+
+            elif choice == '4':
+                multi_channel_patterns = detect_multi_channel_patterns(timeline, user_phone)
+                
+                if multi_channel_patterns:
+                    print(f"\n✅ DETECTED {len(multi_channel_patterns)} MULTI-CHANNEL PATTERNS")
+                    
+                    # Initialize counters
+                    high_risk = []
+                    medium_risk = []
+                    
+                    # Group by risk level
+                    for pattern in multi_channel_patterns:
+                        if pattern['risk_level'] == 'HIGH':
+                            high_risk.append(pattern)
+                        else:
+                            medium_risk.append(pattern)
+                    
+                    print(f"\n📊 **RISK DISTRIBUTION:**")
+                    print(f"   🔴 HIGH RISK: {len(high_risk):,} patterns (SMS → Call → Email or High volume SMS+Call)")
+                    print(f"   🟡 MEDIUM RISK: {len(medium_risk):,} patterns (2-channel coordination)")
+                    
+                    # Show all HIGH RISK patterns with details
+                    if high_risk:
+                        print(f"\n{'='*80}")
+                        print(" 🔴 HIGH RISK MULTI-CHANNEL PATTERNS (DETAILED)")
+                        print(f"{'='*80}")
+                        
+                        for idx, pattern in enumerate(high_risk[:5], 1):  # Show top 5 high risk patterns
+                            print(f"\n{idx}. 🚨 **HIGH RISK PATTERN**")
+                            print(f"   Contact: {pattern['contact']}")
+                            print(f"   Time Window: {pattern['time_start'].strftime('%Y-%m-%d %H:%M')} to {pattern['time_end'].strftime('%Y-%m-%d %H:%M')}")
+                            print(f"   Duration: {pattern['duration_minutes']:.1f} minutes")
+                            print(f"   Channels Used: {' → '.join(pattern['media_used'])}")
+                            print(f"   Total Communications: {pattern['total_events']}")
+                            
+                            print(f"\n   📋 **COMMUNICATION SEQUENCE:**")
+                            for i, (medium, direction, content) in enumerate(pattern['sequence'][:10], 1):
+                                dir_symbol = "📤" if direction == 'FROM_USER' else "📥"
+                                dir_text = "User → Contact" if direction == 'FROM_USER' else "Contact → User"
+                                print(f"      {i}. {dir_symbol} {medium}: {dir_text}")
+                                if content:
+                                    print(f"         Content: {content[:100]}...")
+                            
+                            if len(pattern['sequence']) > 10:
+                                print(f"      ... and {len(pattern['sequence']) - 10} more events")
+                            
+                            # Forensic interpretation
+                            print(f"\n   🔍 **FORENSIC ANALYSIS:**")
+                            if len(pattern['media_used']) == 3:
+                                print(f"      • Full 3-channel coordination detected")
+                                print(f"      • Pattern: {' → '.join([seq[0] for seq in pattern['sequence'][:3]])}")
+                                print(f"      • This could indicate: Urgent coordination, crisis management, or covert planning")
+                            elif 'SMS' in pattern['media_used'] and 'CALL' in pattern['media_used']:
+                                print(f"      • SMS+Call coordination detected")
+                                print(f"      • High volume of {pattern['total_events']} interactions")
+                                print(f"      • This could indicate: Close personal/business relationship or frequent coordination")
+                            print("-" * 80)
+                        
+                        if len(high_risk) > 5:
+                            print(f"\n... and {len(high_risk) - 5} more high-risk patterns")
+                    
+                    # Show MEDIUM RISK patterns summary
+                    if medium_risk:
+                        print(f"\n{'='*80}")
+                        print(" 🟡 MEDIUM RISK MULTI-CHANNEL PATTERNS ")
+                        print(f"{'='*80}")
+                        
+                        # Group medium risk patterns by channel combination
+                        channel_groups = {}
+                        for pattern in medium_risk:
+                            channel_key = '+'.join(sorted(pattern['media_used']))
+                            if channel_key not in channel_groups:
+                                channel_groups[channel_key] = []
+                            channel_groups[channel_key].append(pattern)
+                        
+                        for channel_key, patterns in channel_groups.items():
+                            print(f"\n📊 **{channel_key} Patterns:** {len(patterns)} contacts")
+                            print(f"   Sample contacts:")
+                            for pattern in patterns[:3]:  # Show first 3 examples
+                                print(f"      • {pattern['contact'][:40]}...")
+                                print(f"        Events: {pattern['total_events']} | Duration: {pattern['duration_minutes']:.1f} min")
+                                print(f"        Sequence: {' → '.join([seq[0] for seq in pattern['sequence'][:3]])}")
+                            
+                            if len(patterns) > 3:
+                                print(f"        ... and {len(patterns) - 3} more contacts")
+                        
+                        # Show detailed view for top medium risk patterns
+                        print(f"\n📋 **TOP 5 MEDIUM RISK PATTERNS (DETAILED):**")
+                        for idx, pattern in enumerate(sorted(medium_risk, key=lambda x: x['total_events'], reverse=True)[:5], 1):
+                            print(f"\n   {idx}. Contact: {pattern['contact'][:50]}")
+                            print(f"      Channels: {' → '.join(pattern['media_used'])}")
+                            print(f"      Total Events: {pattern['total_events']}")
+                            print(f"      First: {pattern['first_seen'].strftime('%Y-%m-%d %H:%M')}")
+                            print(f"      Last: {pattern['last_seen'].strftime('%Y-%m-%d %H:%M')}")
+                            print(f"      Communication pattern:")
+                            
+                            # Show first few events in sequence
+                            for j, event in enumerate(pattern['events'][:3], 1):
+                                direction = "OUT" if event.get('direction') == 'FROM_USER' else "IN"
+                                print(f"         {j}. {event['time'].strftime('%H:%M')} - {event['source']} ({direction})")
+                
+                else:
+                    print("\n❌ No multi-channel patterns detected.")
+                    print("\n📊 **COMMUNICATION STATISTICS:**")
+                    print(f"   Total Events: {len(timeline)}")
+                    print(f"   SMS Messages: {len([e for e in timeline if e['source'] == 'SMS'])}")
+                    print(f"   Phone Calls: {len([e for e in timeline if e['source'] == 'CALL'])}")
+                    print(f"   Emails: {len([e for e in timeline if e['source'] == 'EMAIL'])}")
+            
+            elif choice == '5':
+                create_simple_visualizations(timeline, sms_data, call_data, email_data)
+            
+            elif choice == '6':
+                export_forensic_report(timeline, sms_data, call_data, email_data, user_phone)
+            
+            elif choice == '7':
+                print("\n" + "="*70)
+                print(" ANALYSIS COMPLETED")
+                print("="*70)
+                print("Thank you for using the System.")
+                break
+            
+            else:
+                print(" Invalid option. Please select 1-7.")
+    
+    except KeyboardInterrupt:
+        print("\n\n Analysis interrupted by user.")
+    except Exception as e:
+        print(f"\n Unexpected error: {e}")
+        import traceback
+        traceback.print_exc()
 
 if __name__ == "__main__":
     main()
